@@ -1,4 +1,4 @@
-package org.example.gui;
+package simulator.cws;
 
 import java.util.LinkedList;
 import java.util.Queue;

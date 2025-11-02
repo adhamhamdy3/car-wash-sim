@@ -1,4 +1,4 @@
-package org.example.gui;
+package simulator.cws;
 
 public class Semaphore {
     private int permits;

@@ -1,4 +1,4 @@
-package org.example.gui;
+package simulator.cws;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;

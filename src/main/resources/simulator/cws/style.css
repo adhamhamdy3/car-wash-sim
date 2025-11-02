@@ -142,13 +142,13 @@
     -fx-text-fill: white;
     -fx-background-radius: 6;
 }
-.start-btn1{
+.addCarButton{
     -fx-background-color: #1c7ce2;
     -fx-text-fill: white;
     -fx-background-radius: 6;
     -fx-font-size: 16px;
 }
-.start-btn1:hover{
+.addCarButton:hover{
     -fx-background-color: #044890;
 }
 .clear-btn:hover {
