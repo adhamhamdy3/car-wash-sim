@@ -1,23 +1,24 @@
 /* ===== General Layout ===== */
 .root {
     -fx-font-family: "Segoe UI";
-    -fx-background-color: #f5f6fa;
+    -fx-background-color: #f7ede2;
 }
 
 /* ===== Top Bar ===== */
 .top-bar {
-    -fx-background-color: #1e2a38;
+    -fx-background-color: #2d2424;
     -fx-padding: 10;
     -fx-alignment: CENTER_LEFT;
 }
 .vbox {
-    -fx-background-color: #1e2a38;
+    -fx-background-color: #2d2424;
     -fx-padding: 10;
     -fx-alignment: top-left;
 }
 .top-label {
     -fx-text-fill: white;
     -fx-font-weight: bold;
+    -fx-font-family: "JetBrains Mono";
 }
 
 .top-input {
@@ -29,32 +30,33 @@
 
 /* Buttons */
 .start-btn {
-    -fx-background-color: #2ecc71;
+    -fx-background-color: #e36414;
+    -fx-font-family: Popp;
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-background-radius: 6;
 }
 .start-btn:hover {
-    -fx-background-color: #27ae60;
+    -fx-background-color: rgba(227, 100, 20, 0.86);
 }
 
 .stop-btn {
-    -fx-background-color: #e74c3c;
+    -fx-background-color: #d32f2f;
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-background-radius: 6;
 }
 .stop-btn:hover {
-    -fx-background-color: #c0392b;
+    -fx-background-color: rgba(211, 47, 47, 0.79);
 }
 
 .reset-btn {
-    -fx-background-color: #7f8c8d;
+    -fx-background-color: #bfa89e;
     -fx-text-fill: white;
     -fx-background-radius: 6;
 }
 .reset-btn:hover {
-    -fx-background-color: #707b7c;
+    -fx-background-color: rgba(191, 168, 158, 0.76);
 }
 
 /* ===== Main Area ===== */
@@ -66,7 +68,7 @@
 .section-title {
     -fx-font-size: 16px;
     -fx-font-weight: bold;
-    -fx-text-fill: #2c3e50;
+    -fx-text-fill: #7b3000;
 }
 
 .queue-container {
@@ -99,65 +101,67 @@
 
 /* ===== Stats Bar ===== */
 .stats-bar {
-    -fx-background-color: #1e2a38;
+    -fx-background-color: #2d2424;
     -fx-padding: 10;
     -fx-border-radius: 8;
 }
 .stat-blue {
     -fx-text-fill: #3498db;
     -fx-font-size: 16px;
+    -fx-font-weight: 700;
 }
 .stat-green {
     -fx-text-fill: #2ecc71;
     -fx-font-size: 16px;
+    -fx-font-weight: 700;
 }
 .stat-orange {
     -fx-text-fill: #e67e22;
     -fx-font-size: 16px;
+    -fx-font-weight: 700;
 }
 
 /* ===== Log Panel ===== */
 .log-panel {
-    -fx-background-color: #1e2a38;
     -fx-padding: 15;
     -fx-border-radius: 8;
 }
 
 .log-title {
-    -fx-text-fill: white;
+    -fx-text-fill: #7b3000;
     -fx-font-weight: bold;
     -fx-font-size: 14px;
 }
 
 .log-area {
-    -fx-control-inner-background: #0f1620;
-    -fx-text-fill: #00ff66;
+    -fx-control-inner-background: #150c0a;
+    -fx-text-fill: #ffdd03;
     -fx-font-family: Consolas;
     -fx-background-radius: 6;
     -fx-border-radius: 6;
 }
 
 .clear-btn {
-    -fx-background-color: #7f8c8d;
+    -fx-background-color: #6c3b2f;
     -fx-text-fill: white;
     -fx-background-radius: 6;
 }
 .addCarButton{
-    -fx-background-color: #1c7ce2;
+    -fx-background-color: #ff7b00;
     -fx-text-fill: white;
     -fx-background-radius: 6;
     -fx-font-size: 16px;
 }
 .addCarButton:hover{
-    -fx-background-color: #044890;
+    -fx-background-color: rgba(227, 100, 20, 0.86);
 }
 .clear-btn:hover {
-    -fx-background-color: #707b7c;
+    -fx-background-color: #5d3229;
 }
 
 /* ===== Footer ===== */
 .footer-bar {
-    -fx-background-color: #1e2a38;
+    -fx-background-color: #2d2424;
     -fx-padding: 5 15 5 15;
 }
 .footer-text {

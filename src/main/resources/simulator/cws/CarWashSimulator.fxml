@@ -41,26 +41,26 @@
                   <Button fx:id="addCarButton" prefHeight="23.0" prefWidth="98.0" styleClass="addCarButton" text="Add Car" />
                </children>
             </HBox>
-                <VBox fx:id="queueContainer" minHeight="113.0" prefHeight="113.0" prefWidth="750.0" styleClass="queue-container">
+                <VBox fx:id="queueContainer" minHeight="113.0" prefHeight="142.0" prefWidth="750.0" styleClass="queue-container">
                     <Label styleClass="queue-empty-label" text="Queue Empty" />
                 </VBox>
                 <Label fx:id="queueStatusLabel" styleClass="queue-status" text="Queue: 0/0" />
 
                 <Label styleClass="section-title" text="Service Bays (Pumps)" />
-                <FlowPane fx:id="pumpsContainer" hgap="10" prefHeight="273.0" prefWidth="750.0" styleClass="pumps-container" vgap="10" />
+                <FlowPane fx:id="pumpsContainer" hgap="10" prefHeight="291.0" prefWidth="750.0" styleClass="pumps-container" vgap="10" />
 
                 <!-- BOTTOM STATS BAR -->
                 <HBox alignment="BOTTOM_CENTER" spacing="30" styleClass="stats-bar">
-                    <Label fx:id="arrivedLabel" styleClass="stat-blue" text="Total cars arrived: 0" />
-                    <Label fx:id="servicedLabel" styleClass="stat-green" text="Cars serviced: 0" />
-                    <Label fx:id="waitingLabel" styleClass="stat-orange" text="Cars waiting: 0" />
+                    <Label fx:id="arrivedLabel" prefHeight="24.0" prefWidth="163.0" styleClass="stat-blue" text="Total cars arrived: 0" />
+                    <Label fx:id="servicedLabel" prefHeight="26.0" prefWidth="141.0" styleClass="stat-green" text="Cars serviced: 0" />
+                    <Label fx:id="waitingLabel" prefHeight="26.0" prefWidth="126.0" styleClass="stat-orange" text="Cars waiting: 0" />
                 </HBox>
             </VBox>
 
             <!-- RIGHT SIDE -->
             <VBox prefWidth="320" spacing="10" styleClass="log-panel">
                 <Label styleClass="log-title" text="Activity Log" />
-                <TextArea fx:id="logArea" editable="false" prefHeight="420" styleClass="log-area" wrapText="true" />
+                <TextArea fx:id="logArea" editable="false" prefHeight="522.0" prefWidth="290.0" styleClass="log-area" wrapText="true" />
                 <Button fx:id="clearLogBtn" styleClass="clear-btn" text="Clear Log" />
             </VBox>
         </HBox>

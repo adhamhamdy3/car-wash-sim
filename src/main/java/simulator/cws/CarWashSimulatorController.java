@@ -78,12 +78,17 @@ public class CarWashSimulatorController {
     private void addCar() {
         if (!simulationRunning) {
             log("Start the simulation first!");
-            return;
+        }
+        else if(totalWaiting >= waitingAreaSize) {
+            addCarButton.setDisable(true);
+            log("Reached maximum capacity.");
+        }
+        else{
+            int carId = carCounter.getAndIncrement();
+            Car c = new Car(carId, queue, mutex, empty, full, this);
+            c.start();
         }
 
-        int carId = carCounter.getAndIncrement();
-        Car c = new Car(carId, queue, mutex, empty, full, this);
-        c.start();
     }
 
     private void stopSimulation() {
@@ -119,11 +124,17 @@ public class CarWashSimulatorController {
             logArea.appendText("• " + message + "\n");
 
             if (message.contains("arrived")) {
+                if(totalWaiting == waitingAreaSize){
+                    addCarButton.setDisable(true);
+                }
                 totalArrived++;
                 totalWaiting++;
             }
             if (message.contains("begins service")) {
                 totalWaiting--;
+                if(totalWaiting < waitingAreaSize){
+                    addCarButton.setDisable(false);
+                }
             }
             if (message.contains("finishes service")) {
                 totalServiced++;
