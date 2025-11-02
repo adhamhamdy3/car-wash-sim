@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane stylesheets="@../../../style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.gui.CarWashSimulatorController">
+<BorderPane stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.gui.CarWashSimulatorController">
 
     <top>
       <VBox styleClass="vbox">
@@ -38,7 +38,7 @@
             <HBox spacing="480.0">
                <children>
                       <Label prefHeight="19.0" prefWidth="170.0" styleClass="section-title" text="Waiting Queue" />
-                  <Button fx:id="startBtn1" prefHeight="23.0" prefWidth="98.0" styleClass="start-btn1" text="Add Car" />
+                  <Button fx:id="addCarButton" prefHeight="23.0" prefWidth="98.0" styleClass="addCarButton" text="Add Car" />
                </children>
             </HBox>
                 <VBox fx:id="queueContainer" minHeight="113.0" prefHeight="113.0" prefWidth="750.0" styleClass="queue-container">
