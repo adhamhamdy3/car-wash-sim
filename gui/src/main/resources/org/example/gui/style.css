@@ -6,12 +6,12 @@
 
 /* ===== Top Bar ===== */
 .top-bar {
-    -fx-background-color: #1e2a38;
+    -fx-background-color: #2c3e50;
     -fx-padding: 10;
     -fx-alignment: CENTER_LEFT;
 }
 .vbox {
-    -fx-background-color: #1e2a38;
+    -fx-background-color: #2c3e50;
     -fx-padding: 10;
     -fx-alignment: top-left;
 }
@@ -99,11 +99,12 @@
 
 /* ===== Stats Bar ===== */
 .stats-bar {
-    -fx-background-color: #1e2a38;
+    -fx-background-color: #2c3e50;
     -fx-padding: 10;
     -fx-border-radius: 8;
 }
 .stat-blue {
+    -fx-font-family: Arial;
     -fx-text-fill: #3498db;
     -fx-font-size: 16px;
 }
@@ -118,7 +119,7 @@
 
 /* ===== Log Panel ===== */
 .log-panel {
-    -fx-background-color: #1e2a38;
+    -fx-background-color: #2c3e50;
     -fx-padding: 15;
     -fx-border-radius: 8;
 }
@@ -130,9 +131,9 @@
 }
 
 .log-area {
-    -fx-control-inner-background: #0f1620;
-    -fx-text-fill: #00ff66;
-    -fx-font-family: Consolas;
+    -fx-control-inner-background: #1e1e1e;
+    -fx-text-fill: #00ff00;
+    -fx-font-family: "Fira Code";
     -fx-background-radius: 6;
     -fx-border-radius: 6;
 }

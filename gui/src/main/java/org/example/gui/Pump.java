@@ -40,7 +40,7 @@ public class Pump extends Thread {
                 pumps.acquire(); // acquire a service bay
 
                 controller.log(pumpTag + ": " + car + " begins service at Bay " + id);
-                Thread.sleep((int) (Math.random() * 2000) + 1000); // simulate work
+                Thread.sleep((int) (Math.random() * 2000) + 2500); // simulate work
 
                 controller.log(pumpTag + ": " + car + " finishes service");
                 controller.log(pumpTag + ": Bay " + id + " is now free");
