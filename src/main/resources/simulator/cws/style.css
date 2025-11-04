@@ -177,3 +177,15 @@
     -fx-padding: 10;
     -fx-spacing: 5;
 }
+
+
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.scroll-bar:horizontal, .scroll-bar:vertical {
+    -fx-background-color: #eee;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
