@@ -5,6 +5,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.text.Text;
 
 public class CarWashSimulatorController {
 
@@ -34,6 +40,12 @@ public class CarWashSimulatorController {
     private boolean simulationRunning = false;
 
     private List<Pump> pumpThreads = new ArrayList<>();
+    //cars queue
+    private int carImageIndex = 1;
+    @FXML private FlowPane queueContainer;
+
+    //pumps cards
+    @FXML private FlowPane pumpsContainer;
 
     @FXML
     public void initialize() {
@@ -63,6 +75,42 @@ public class CarWashSimulatorController {
         simulationRunning = true;
         log("Simulation started with waiting capacity " + waitingAreaSize + " and " + numPumps + " pumps.");
 
+        //visual changes to pump cards
+        Platform.runLater(() -> {
+            pumpsContainer.getChildren().clear();
+            for (int i = 1; i <= numPumps; i++) {
+                VBox pumpCard = new VBox(5);
+                pumpCard.getStyleClass().add("pump-card");
+                pumpCard.setPrefWidth(210);
+                pumpCard.setPrefHeight(150);
+                pumpCard.setStyle("-fx-alignment: center; -fx-background-color: #f7f7f7; -fx-padding: 10; -fx-border-color: #ccc; -fx-border-radius: 10; -fx-background-radius: 10;");
+
+                // Pump image
+                ImageView pumpImage = new ImageView(new Image(getClass().getResource("/simulator/cws/assets/pump.png").toExternalForm()));
+                pumpImage.setFitWidth(80);
+                pumpImage.setFitHeight(80);
+
+                // Light indicator (start as green)
+                ImageView lightImage = new ImageView(new Image(getClass().getResource("/simulator/cws/assets/green.png").toExternalForm()));
+                lightImage.setFitWidth(48);
+                lightImage.setFitHeight(19);
+
+                // Countdown label
+                Label countdownLabel = new Label("0s");
+                countdownLabel.getStyleClass().add("countdown-label");
+
+                // Pump label
+                Label pumpLabel = new Label("Pump " + i);
+                pumpLabel.getStyleClass().add("pump-label");
+
+                // Layout: light + countdown on same row
+                HBox topBar = new HBox(5, lightImage, countdownLabel);
+                topBar.setStyle("-fx-alignment: center;");
+
+                pumpCard.getChildren().addAll(topBar, pumpImage, pumpLabel);
+                pumpsContainer.getChildren().add(pumpCard);
+            }
+        });
         // start pump threads
         for (int i = 1; i <= numPumps; i++) {
             Pump p = new Pump(i, queue, mutex, empty, full, pumps, this);
@@ -87,6 +135,29 @@ public class CarWashSimulatorController {
             int carId = carCounter.getAndIncrement();
             Car c = new Car(carId, queue, mutex, empty, full, this);
             c.start();
+            Platform.runLater(() -> {
+                // Create a VBox to hold the car image and label
+                VBox carBox = new VBox(5);
+                carBox.setAlignment(javafx.geometry.Pos.CENTER);
+
+                // Cycle through 1.png–8.png for car images
+                int imageNumber = (carImageIndex - 1) % 8 + 1;
+                String imagePath = "/simulator/cws/assets/" + imageNumber + ".png";
+                carImageIndex++;
+
+                // Load the car image
+                ImageView carImage = new ImageView(new Image(getClass().getResourceAsStream(imagePath)));
+                carImage.setFitWidth(90);
+                carImage.setFitHeight(90);
+
+                // Label under the car image (C1, C2, ...)
+                Text carLabel = new Text("C" + carId);
+
+                carBox.getChildren().addAll(carImage, carLabel);
+
+                // Add the car box to the FlowPane queueContainer
+                queueContainer.getChildren().add(carBox);
+            });
         }
 
     }
@@ -106,6 +177,7 @@ public class CarWashSimulatorController {
         queue = null;
         pumpThreads.clear();
         logArea.clear();
+        queueContainer.getChildren().clear();
         carCounter.set(1);
         startBtn.setDisable(false);
         addCarButton.setDisable(true);
@@ -132,6 +204,9 @@ public class CarWashSimulatorController {
             }
             if (message.contains("begins service")) {
                 totalWaiting--;
+                if(!queueContainer.getChildren().isEmpty()){
+                    queueContainer.getChildren().removeFirst();
+                }
                 if(totalWaiting < waitingAreaSize){
                     addCarButton.setDisable(false);
                 }
@@ -145,4 +220,5 @@ public class CarWashSimulatorController {
             waitingLabel.setText("Cars waiting: " + totalWaiting);
         });
     }
+
 }

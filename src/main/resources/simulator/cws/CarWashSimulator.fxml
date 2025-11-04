@@ -41,13 +41,13 @@
                   <Button fx:id="addCarButton" prefHeight="23.0" prefWidth="98.0" styleClass="addCarButton" text="Add Car" />
                </children>
             </HBox>
-                <VBox fx:id="queueContainer" minHeight="113.0" prefHeight="142.0" prefWidth="750.0" styleClass="queue-container">
-                    <Label styleClass="queue-empty-label" text="Queue Empty" />
-                </VBox>
+                <FlowPane fx:id="queueContainer" hgap="10" maxHeight="178.0" minHeight="113.0" prefHeight="178.0" prefWidth="750.0" styleClass="queue-container" vgap="15">
+
+                </FlowPane>
                 <Label fx:id="queueStatusLabel" styleClass="queue-status" text="Queue: 0/0" />
 
                 <Label styleClass="section-title" text="Service Bays (Pumps)" />
-                <FlowPane fx:id="pumpsContainer" hgap="10" prefHeight="291.0" prefWidth="750.0" styleClass="pumps-container" vgap="10" />
+                <FlowPane fx:id="pumpsContainer" hgap="10" maxWidth="750.0" prefHeight="323.0" prefWidth="750.0" styleClass="pumps-container" vgap="10" />
 
                 <!-- BOTTOM STATS BAR -->
                 <HBox alignment="BOTTOM_CENTER" spacing="30" styleClass="stats-bar">
@@ -60,7 +60,7 @@
             <!-- RIGHT SIDE -->
             <VBox prefWidth="320" spacing="10" styleClass="log-panel">
                 <Label styleClass="log-title" text="Activity Log" />
-                <TextArea fx:id="logArea" editable="false" prefHeight="522.0" prefWidth="290.0" styleClass="log-area" wrapText="true" />
+                <TextArea fx:id="logArea" editable="false" prefHeight="558.0" prefWidth="290.0" styleClass="log-area" wrapText="true" />
                 <Button fx:id="clearLogBtn" styleClass="clear-btn" text="Clear Log" />
             </VBox>
         </HBox>

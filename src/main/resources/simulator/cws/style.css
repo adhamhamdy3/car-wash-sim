@@ -168,3 +168,12 @@
     -fx-text-fill: white;
     -fx-font-size: 18px;
 }
+.pump-card{
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 10;
+    -fx-border-color: #dcdcdc;
+    -fx-border-radius: 10;
+    -fx-alignment: center;
+    -fx-padding: 10;
+    -fx-spacing: 5;
+}
