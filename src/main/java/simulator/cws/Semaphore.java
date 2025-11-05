@@ -19,6 +19,9 @@ public class Semaphore {
         notifyAll();
     }
 
+    public synchronized void setPermits(int newPermits) {
+        this.permits = newPermits;
+    }
     public synchronized int availablePermits() {
         return permits;
     }

@@ -13,7 +13,6 @@
 .vbox {
     -fx-background-color: #2d2424;
     -fx-padding: 10;
-    -fx-alignment: top-left;
 }
 .top-label {
     -fx-text-fill: white;
@@ -22,6 +21,7 @@
 }
 
 .top-input {
+    -fx-background-color: white;
     -fx-background-radius: 6;
     -fx-border-radius: 6;
     -fx-border-color: transparent;
@@ -31,10 +31,11 @@
 /* Buttons */
 .start-btn {
     -fx-background-color: #e36414;
-    -fx-font-family: Popp;
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-background-radius: 6;
+    -fx-cursor: hand;
+    -fx-padding: 8 16;
 }
 .start-btn:hover {
     -fx-background-color: rgba(227, 100, 20, 0.86);
@@ -45,6 +46,8 @@
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-background-radius: 6;
+    -fx-cursor: hand;
+    -fx-padding: 8 16;
 }
 .stop-btn:hover {
     -fx-background-color: rgba(211, 47, 47, 0.79);
@@ -53,15 +56,32 @@
 .reset-btn {
     -fx-background-color: #bfa89e;
     -fx-text-fill: white;
+    -fx-font-weight: bold;
     -fx-background-radius: 6;
+    -fx-cursor: hand;
+    -fx-padding: 8 16;
 }
 .reset-btn:hover {
     -fx-background-color: rgba(191, 168, 158, 0.76);
 }
 
+.addCarButton{
+    -fx-background-color: #ff7b00;
+    -fx-text-fill: white;
+    -fx-background-radius: 6;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-padding: 6 16;
+}
+.addCarButton:hover{
+    -fx-background-color: rgba(227, 100, 20, 0.86);
+}
+
 /* ===== Main Area ===== */
 .main-area {
     -fx-padding: 15;
+    -fx-background-color: #f7ede2;
 }
 
 /* ===== Queue Section ===== */
@@ -73,11 +93,11 @@
 
 .queue-container {
     -fx-border-color: #dcdde1;
+    -fx-border-width: 1;
     -fx-border-radius: 8;
     -fx-background-color: white;
     -fx-padding: 20;
     -fx-min-height: 120;
-    -fx-alignment: CENTER;
 }
 
 .queue-empty-label {
@@ -88,11 +108,18 @@
 .queue-status {
     -fx-text-fill: #7f8c8d;
     -fx-font-size: 13px;
+    -fx-font-weight: bold;
 }
 
 /* ===== Pumps Section ===== */
+.pumps-scroll {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
 .pumps-container {
     -fx-border-color: #dcdde1;
+    -fx-border-width: 1;
     -fx-border-radius: 8;
     -fx-background-color: white;
     -fx-padding: 20;
@@ -102,58 +129,60 @@
 /* ===== Stats Bar ===== */
 .stats-bar {
     -fx-background-color: #2d2424;
-    -fx-padding: 10;
+    -fx-padding: 15 20;
     -fx-border-radius: 8;
+    -fx-background-radius: 8;
 }
 .stat-blue {
     -fx-text-fill: #3498db;
-    -fx-font-size: 16px;
+    -fx-font-size: 15px;
     -fx-font-weight: 700;
 }
 .stat-green {
     -fx-text-fill: #2ecc71;
-    -fx-font-size: 16px;
+    -fx-font-size: 15px;
     -fx-font-weight: 700;
 }
 .stat-orange {
     -fx-text-fill: #e67e22;
-    -fx-font-size: 16px;
+    -fx-font-size: 15px;
     -fx-font-weight: 700;
 }
 
 /* ===== Log Panel ===== */
 .log-panel {
     -fx-padding: 15;
+    -fx-background-color: white;
+    -fx-border-color: #dcdde1;
+    -fx-border-width: 1;
     -fx-border-radius: 8;
+    -fx-background-radius: 8;
 }
 
 .log-title {
     -fx-text-fill: #7b3000;
     -fx-font-weight: bold;
-    -fx-font-size: 14px;
+    -fx-font-size: 16px;
 }
 
 .log-area {
     -fx-control-inner-background: #150c0a;
     -fx-text-fill: #ffdd03;
-    -fx-font-family: Consolas;
+    -fx-font-family: "Consolas", monospace;
+    -fx-font-size: 12px;
     -fx-background-radius: 6;
     -fx-border-radius: 6;
+    -fx-border-color: #2d2424;
+    -fx-border-width: 1;
 }
 
 .clear-btn {
     -fx-background-color: #6c3b2f;
     -fx-text-fill: white;
     -fx-background-radius: 6;
-}
-.addCarButton{
-    -fx-background-color: #ff7b00;
-    -fx-text-fill: white;
-    -fx-background-radius: 6;
-    -fx-font-size: 16px;
-}
-.addCarButton:hover{
-    -fx-background-color: rgba(227, 100, 20, 0.86);
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-padding: 8 16;
 }
 .clear-btn:hover {
     -fx-background-color: #5d3229;
@@ -162,30 +191,61 @@
 /* ===== Footer ===== */
 .footer-bar {
     -fx-background-color: #2d2424;
-    -fx-padding: 5 15 5 15;
+    -fx-padding: 5 15;
 }
 .footer-text {
     -fx-text-fill: white;
-    -fx-font-size: 18px;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
 }
+
+/* ===== Pump Cards ===== */
 .pump-card{
     -fx-background-color: #ffffff;
     -fx-background-radius: 10;
     -fx-border-color: #dcdcdc;
+    -fx-border-width: 1;
     -fx-border-radius: 10;
     -fx-alignment: center;
     -fx-padding: 10;
     -fx-spacing: 5;
 }
 
-
+/* ===== ScrollPane Responsiveness ===== */
 .scroll-pane {
     -fx-background-color: transparent;
     -fx-border-color: transparent;
 }
 
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane > .corner {
+    -fx-background-color: transparent;
+}
+
 .scroll-bar:horizontal, .scroll-bar:vertical {
-    -fx-background-color: #eee;
+    -fx-background-color: #f0f0f0;
     -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
+
+.scroll-bar:horizontal .thumb, .scroll-bar:vertical .thumb {
+    -fx-background-color: #bfa89e;
+    -fx-background-radius: 5;
+}
+
+.scroll-bar:horizontal .thumb:hover, .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #a08d83;
+}
+
+.scroll-bar .increment-button, .scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.scroll-bar:horizontal .track, .scroll-bar:vertical .track {
+    -fx-background-color: #f0f0f0;
     -fx-background-radius: 5;
 }

@@ -12,8 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.text.Text;
 
-public class CarWashSimulatorController {
-
+public class MainController {
     @FXML private TextField capacityField;
     @FXML private TextField pumpsField;
     @FXML private Button startBtn;
@@ -22,30 +21,27 @@ public class CarWashSimulatorController {
     @FXML private Button addCarButton; // "Add Car"
     @FXML private Button clearLogBtn;
     @FXML private TextArea logArea;
-    // the stats part
+    @FXML private Spinner<Integer> speedSpinner;
+
+    // Stats
     @FXML private Label arrivedLabel;
     @FXML private Label servicedLabel;
     @FXML private Label waitingLabel;
+
     private int totalArrived = 0;
     private int totalServiced = 0;
     private int totalWaiting = 0;
-    private Queue<Integer> waitingQueue = new LinkedList<>();
-    private Queue<String> queue;
-    private Semaphore mutex, empty, full, pumps;
+    private int waitingAreaSize = 0; // set when starting simulation
 
-    private int waitingAreaSize;
-    private int numPumps;
 
-    private final AtomicInteger carCounter = new AtomicInteger(1);
-    private boolean simulationRunning = false;
-
-    private List<Pump> pumpThreads = new ArrayList<>();
-    //cars queue
-    private int carImageIndex = 1;
+    // Cars queue
     @FXML private FlowPane queueContainer;
 
-    //pumps cards
+    // Pumps cards
     @FXML private FlowPane pumpsContainer;
+
+    // Service Station
+    private ServiceStation station;
 
     @FXML
     public void initialize() {
@@ -57,24 +53,7 @@ public class CarWashSimulatorController {
         clearLogBtn.setOnAction(e -> clearLog());
     }
 
-    private void startSimulation() {
-        try {
-            waitingAreaSize = Integer.parseInt(capacityField.getText());
-            numPumps = Integer.parseInt(pumpsField.getText());
-        } catch (NumberFormatException e) {
-            log("Please enter valid numbers for capacity and pumps.");
-            return;
-        }
-
-        queue = new LinkedList<>();
-        mutex = new Semaphore(1);
-        empty = new Semaphore(waitingAreaSize);
-        full = new Semaphore(0);
-        pumps = new Semaphore(numPumps);
-
-        simulationRunning = true;
-        log("Simulation started with waiting capacity " + waitingAreaSize + " and " + numPumps + " pumps.");
-
+    void setupPumpCards(int numPumps) {
         //visual changes to pump cards
         Platform.runLater(() -> {
             pumpsContainer.getChildren().clear();
@@ -111,80 +90,85 @@ public class CarWashSimulatorController {
                 pumpsContainer.getChildren().add(pumpCard);
             }
         });
-        // start pump threads
-        for (int i = 1; i <= numPumps; i++) {
-            Pump p = new Pump(i, queue, mutex, empty, full, pumps, this);
-            pumpThreads.add(p);
-            p.start();
-        }
+    }
 
-        startBtn.setDisable(true);
-        addCarButton.setDisable(false);
-        stopBtn.setDisable(false);
+    void createCarCard() {
+        Platform.runLater(() -> {
+            // Create a VBox to hold the car image and label
+            VBox carBox = new VBox(5);
+            carBox.setAlignment(javafx.geometry.Pos.CENTER);
+
+            // Cycle through 1.png–8.png for car images
+            int imageNumber = (station.getCarCounter()) % 8 + 1;
+            String imagePath = "/simulator/cws/assets/" + imageNumber + ".png";
+
+            // Load the car image
+            ImageView carImage = new ImageView(new Image(getClass().getResourceAsStream(imagePath)));
+            carImage.setFitWidth(90);
+            carImage.setFitHeight(90);
+
+            // Label under the car image (C1, C2, ...)
+            Text carLabel = new Text("C" + station.getCarCounter());
+
+            carBox.getChildren().addAll(carImage, carLabel);
+
+            // Add the car box to the FlowPane queueContainer
+            queueContainer.getChildren().add(carBox);
+        });
+    }
+
+    private void startSimulation() {
+        try {
+            int waitingAreaSize = Integer.parseInt(capacityField.getText());
+            int numPumps = Integer.parseInt(pumpsField.getText());
+
+            station = new ServiceStation(waitingAreaSize, numPumps, this::log);
+            station.startSimulation();
+
+            setupPumpCards(numPumps);
+
+            startBtn.setDisable(true);
+            stopBtn.setDisable(false);
+        } catch (NumberFormatException e) {
+            log("Please enter valid numbers for capacity and pumps.");
+        }
     }
 
     private void addCar() {
-        if (!simulationRunning) {
+        if (!station.isRunning()) {
             log("Start the simulation first!");
-        }
-        else if(totalWaiting >= waitingAreaSize) {
-            addCarButton.setDisable(true);
-            log("Reached maximum capacity.");
-        }
-        else{
-            int carId = carCounter.getAndIncrement();
-            Car c = new Car(carId, queue, mutex, empty, full, this);
-            c.start();
-            Platform.runLater(() -> {
-                // Create a VBox to hold the car image and label
-                VBox carBox = new VBox(5);
-                carBox.setAlignment(javafx.geometry.Pos.CENTER);
-
-                // Cycle through 1.png–8.png for car images
-                int imageNumber = (carImageIndex - 1) % 8 + 1;
-                String imagePath = "/simulator/cws/assets/" + imageNumber + ".png";
-                carImageIndex++;
-
-                // Load the car image
-                ImageView carImage = new ImageView(new Image(getClass().getResourceAsStream(imagePath)));
-                carImage.setFitWidth(90);
-                carImage.setFitHeight(90);
-
-                // Label under the car image (C1, C2, ...)
-                Text carLabel = new Text("C" + carId);
-
-                carBox.getChildren().addAll(carImage, carLabel);
-
-                // Add the car box to the FlowPane queueContainer
-                queueContainer.getChildren().add(carBox);
-            });
+            return;
         }
 
+//        if(station.getTotalWaiting() >= station.getWaitingAreaSize()) {
+//            addCarButton.setDisable(true);
+//            log("Reached maximum capacity.");
+//            return;
+//        }
+
+        station.addCar();
+
+        createCarCard();
     }
 
     private void stopSimulation() {
-        simulationRunning = false;
-        for (Pump p : pumpThreads) {
-            p.interrupt();
-        }
+        station.stopSimulation();
+
         log("Simulation stopped manually.");
+
         stopBtn.setDisable(true);
         addCarButton.setDisable(true);
     }
 
     private void resetSimulation() {
-        simulationRunning = false;
-        queue = null;
-        pumpThreads.clear();
+        station.reset();
+
         logArea.clear();
         queueContainer.getChildren().clear();
-        carCounter.set(1);
         startBtn.setDisable(false);
         addCarButton.setDisable(true);
         stopBtn.setDisable(true);
-        totalArrived = 0;
-        totalServiced = 0;
-        totalWaiting = 0;
+
         log("Simulation reset.");
     }
     private void clearLog(){
