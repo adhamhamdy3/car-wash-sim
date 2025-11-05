@@ -50,7 +50,7 @@ public class ServiceStation {
     }
 
     // Called from controller when user clicks "Start Simulation"
-    public void startSimulation() {
+    public void startSimulation(int pumpSpeed) {
         if (running) {
             logCallback.accept("Simulation already running.");
             return;
@@ -63,7 +63,7 @@ public class ServiceStation {
 
         // create and start pump threads
         for (int i = 1; i <= numPumps; i++) {
-            Pump pump = new Pump(i, queue, mutex, empty, full, pumps, logCallback);
+            Pump pump = new Pump(i, queue, mutex, empty, full, pumps, pumpSpeed, logCallback);
             pumpsList.add(pump);
             pump.start();
         }

@@ -32,7 +32,6 @@ public class Car extends Thread {
             mutex.acquire(); // lock access to queue
 
             queue.add(carTag);
-
             logCallback.accept(carTag + " entered the queue");
 
             mutex.release(); // release access

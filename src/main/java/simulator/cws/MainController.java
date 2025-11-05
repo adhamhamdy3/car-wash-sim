@@ -9,9 +9,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.text.Text;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 public class MainController {
-    public Label queueStatusLabel;
+    @FXML private Label queueStatusLabel;
     @FXML private TextField capacityField;
     @FXML private TextField pumpsField;
     @FXML private Button startBtn;
@@ -44,6 +46,8 @@ public class MainController {
         resetBtn.setOnAction(e -> resetSimulation());
         stopBtn.setOnAction(e -> stopSimulation());
         clearLogBtn.setOnAction(e -> clearLog());
+
+        speedSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10, 2));
     }
 
     void setupPumpCards(int numPumps) {
@@ -116,12 +120,13 @@ public class MainController {
             int numPumps = Integer.parseInt(pumpsField.getText());
 
             station = new ServiceStation(waitingAreaSize, numPumps, this::log);
-            station.startSimulation();
+            station.startSimulation(speedSpinner.getValue());
 
             setupPumpCards(numPumps);
 
             startBtn.setDisable(true);
             stopBtn.setDisable(false);
+            speedSpinner.setDisable(true);
         } catch (NumberFormatException e) {
             log("Please enter valid numbers for capacity and pumps.");
         }
@@ -155,21 +160,26 @@ public class MainController {
         startBtn.setDisable(false);
         addCarButton.setDisable(false);
         stopBtn.setDisable(true);
+        speedSpinner.setDisable(false);
 
         log("Simulation reset.");
     }
+
     private void clearLog(){
         logArea.clear();
     }
+
     // Helper to safely log from any thread
     public void log(String message) {
         Platform.runLater(() -> {
-            logArea.appendText(message + "\n\n");
+            String timestamp = LocalTime.now().format(DateTimeFormatter.ofPattern("hh:mm:ss a"));
+
+            logArea.appendText("[" + timestamp + "] " + message + "\n");
 
             // TODO: CHANGE THIS LOGIC
             if(station.getWaitingCars() >= station.getWaitingAreaSize()) {
                 addCarButton.setDisable(true);
-                log("Reached maximum capacity.");
+                log("Reached maximum capacity."); // careful: recursive log can be repeated
             } else {
                 addCarButton.setDisable(false);
             }
@@ -181,11 +191,13 @@ public class MainController {
                 }
             }
 
+            // Update labels
             queueStatusLabel.setText("Queue: " + station.getWaitingCars() + "/" + station.getWaitingAreaSize());
             arrivedLabel.setText("Total cars arrived: " + station.getCarCounter());
             servicedLabel.setText("Cars serviced: " + station.getServicedCars());
             waitingLabel.setText("Cars waiting: " + station.getWaitingCars());
         });
     }
+
 
 }

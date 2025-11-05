@@ -26,7 +26,7 @@
                     <TextField fx:id="pumpsField" prefWidth="60" promptText="e.g. 3" styleClass="top-input" />
 
                     <Label styleClass="top-label" text="Service pumps speed:" />
-                    <Spinner fx:id="speedSpinner" prefHeight="23.0" prefWidth="74.0" />
+                    <Spinner fx:id="speedSpinner" editable="true" prefHeight="23.0" prefWidth="74.0" />
 
                     <Separator orientation="VERTICAL" prefHeight="25.0" />
 

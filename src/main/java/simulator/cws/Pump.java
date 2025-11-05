@@ -10,12 +10,13 @@ public class Pump extends Thread {
     private final Queue<String> queue;
     private final Semaphore mutex, empty, full, pumps;
     private final Consumer<String> logCallback;
+    private final int pumpSpeed; // in seconds
 
     private final String pumpTag;
 
     public Pump(int id, Queue<String> queue, Semaphore mutex,
                 Semaphore empty, Semaphore full, Semaphore pumps,
-                Consumer<String> logCallback) {
+                int pumpSpeed, Consumer<String> logCallback) {
         this.id = id;
         this.queue = queue;
         this.mutex = mutex;
@@ -23,6 +24,7 @@ public class Pump extends Thread {
         this.full = full;
         this.pumps = pumps;
         this.logCallback = logCallback;
+        this.pumpSpeed = pumpSpeed;
 
         this.pumpTag = "Pump " + id;
     }
@@ -33,8 +35,8 @@ public class Pump extends Thread {
             while (!isInterrupted()) {
                 // wait until there is at least one car
                 full.acquire();
-
                 mutex.acquire();
+
                 if (queue.isEmpty()) {
                     // another pump might have taken it already
                     mutex.release();
@@ -48,7 +50,7 @@ public class Pump extends Thread {
                 pumps.acquire(); // acquire a service bay
 
                 logCallback.accept(pumpTag + ": " + car + " begins service at Bay " + id);
-                Thread.sleep((int) (Math.random() * 2000) + 1000); // simulate service time
+                Thread.sleep( pumpSpeed * 1000L); // simulate service time
 
                 logCallback.accept(pumpTag + ": " + car + " finishes service");
                 logCallback.accept(pumpTag + ": Bay " + id + " is now free");
