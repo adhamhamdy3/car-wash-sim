@@ -1,5 +1,7 @@
 package simulator.cws;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Queue;
 import java.util.function.Consumer;
 
@@ -21,6 +23,7 @@ public class Pump extends Thread {
         this.full = full;
         this.pumps = pumps;
         this.logCallback = logCallback;
+
         this.pumpTag = "Pump " + id;
     }
 

@@ -18,12 +18,12 @@
         <VBox styleClass="vbox">
             <children>
                 <Label styleClass="footer-text" text="Car Wash &amp; Gas Station Simulator" />
-                <HBox spacing="10" styleClass="top-bar" alignment="CENTER_LEFT">
+                <HBox alignment="CENTER_LEFT" spacing="10" styleClass="top-bar">
                     <Label styleClass="top-label" text="Waiting area capacity:" />
-                    <TextField fx:id="capacityField" prefWidth="60" styleClass="top-input" promptText="e.g. 10" />
+                    <TextField fx:id="capacityField" prefWidth="60" promptText="e.g. 10" styleClass="top-input" />
 
                     <Label styleClass="top-label" text="Number of pumps:" />
-                    <TextField fx:id="pumpsField" prefWidth="60" styleClass="top-input" promptText="e.g. 3" />
+                    <TextField fx:id="pumpsField" prefWidth="60" promptText="e.g. 3" styleClass="top-input" />
 
                     <Label styleClass="top-label" text="Service pumps speed:" />
                     <Spinner fx:id="speedSpinner" prefHeight="23.0" prefWidth="74.0" />
@@ -72,7 +72,7 @@
             <!-- RIGHT SIDE -->
             <VBox minWidth="250" prefWidth="320" spacing="10" styleClass="log-panel">
                 <Label styleClass="log-title" text="Activity Log" />
-                <TextArea fx:id="logArea" editable="false" styleClass="log-area" wrapText="true" VBox.vgrow="ALWAYS" promptText="Activity logs will appear here..." />
+                <TextArea fx:id="logArea" editable="false" focusTraversable="false" pickOnBounds="false" promptText="Activity logs will appear here..." styleClass="log-area" wrapText="true" VBox.vgrow="ALWAYS" />
                 <Button fx:id="clearLogBtn" styleClass="clear-btn" text="Clear Log" />
             </VBox>
         </HBox>

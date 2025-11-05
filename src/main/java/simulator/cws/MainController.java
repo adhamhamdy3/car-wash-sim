@@ -3,8 +3,6 @@ package simulator.cws;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -13,12 +11,13 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.text.Text;
 
 public class MainController {
+    public Label queueStatusLabel;
     @FXML private TextField capacityField;
     @FXML private TextField pumpsField;
     @FXML private Button startBtn;
     @FXML private Button stopBtn;
     @FXML private Button resetBtn;
-    @FXML private Button addCarButton; // "Add Car"
+    @FXML private Button addCarButton;
     @FXML private Button clearLogBtn;
     @FXML private TextArea logArea;
     @FXML private Spinner<Integer> speedSpinner;
@@ -27,12 +26,6 @@ public class MainController {
     @FXML private Label arrivedLabel;
     @FXML private Label servicedLabel;
     @FXML private Label waitingLabel;
-
-    private int totalArrived = 0;
-    private int totalServiced = 0;
-    private int totalWaiting = 0;
-    private int waitingAreaSize = 0; // set when starting simulation
-
 
     // Cars queue
     @FXML private FlowPane queueContainer;
@@ -54,7 +47,7 @@ public class MainController {
     }
 
     void setupPumpCards(int numPumps) {
-        //visual changes to pump cards
+        // visual changes to pump cards
         Platform.runLater(() -> {
             pumpsContainer.getChildren().clear();
             for (int i = 1; i <= numPumps; i++) {
@@ -140,12 +133,6 @@ public class MainController {
             return;
         }
 
-//        if(station.getTotalWaiting() >= station.getWaitingAreaSize()) {
-//            addCarButton.setDisable(true);
-//            log("Reached maximum capacity.");
-//            return;
-//        }
-
         station.addCar();
 
         createCarCard();
@@ -166,7 +153,7 @@ public class MainController {
         logArea.clear();
         queueContainer.getChildren().clear();
         startBtn.setDisable(false);
-        addCarButton.setDisable(true);
+        addCarButton.setDisable(false);
         stopBtn.setDisable(true);
 
         log("Simulation reset.");
@@ -177,31 +164,27 @@ public class MainController {
     // Helper to safely log from any thread
     public void log(String message) {
         Platform.runLater(() -> {
-            logArea.appendText("• " + message + "\n");
+            logArea.appendText(message + "\n\n");
 
-            if (message.contains("arrived")) {
-                if(totalWaiting == waitingAreaSize){
-                    addCarButton.setDisable(true);
-                }
-                totalArrived++;
-                totalWaiting++;
+            // TODO: CHANGE THIS LOGIC
+            if(station.getWaitingCars() >= station.getWaitingAreaSize()) {
+                addCarButton.setDisable(true);
+                log("Reached maximum capacity.");
+            } else {
+                addCarButton.setDisable(false);
             }
+
+            // TODO: CHANGE THIS LOGIC
             if (message.contains("begins service")) {
-                totalWaiting--;
                 if(!queueContainer.getChildren().isEmpty()){
                     queueContainer.getChildren().removeFirst();
                 }
-                if(totalWaiting < waitingAreaSize){
-                    addCarButton.setDisable(false);
-                }
-            }
-            if (message.contains("finishes service")) {
-                totalServiced++;
             }
 
-            arrivedLabel.setText("Total cars arrived: " + totalArrived);
-            servicedLabel.setText("Cars serviced: " + totalServiced);
-            waitingLabel.setText("Cars waiting: " + totalWaiting);
+            queueStatusLabel.setText("Queue: " + station.getWaitingCars() + "/" + station.getWaitingAreaSize());
+            arrivedLabel.setText("Total cars arrived: " + station.getCarCounter());
+            servicedLabel.setText("Cars serviced: " + station.getServicedCars());
+            waitingLabel.setText("Cars waiting: " + station.getWaitingCars());
         });
     }
 

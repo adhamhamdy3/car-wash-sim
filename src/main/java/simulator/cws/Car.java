@@ -1,5 +1,7 @@
 package simulator.cws;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Queue;
 import java.util.function.Consumer;
 
@@ -9,8 +11,6 @@ public class Car extends Thread {
     private final Semaphore mutex, empty, full;
     private final String carTag;
     private final Consumer<String> logCallback;
-
-
 
     public Car(int id, Queue<String> queue, Semaphore mutex, Semaphore empty, Semaphore full, Consumer<String> logCallback) {
         this.id = id;
@@ -32,6 +32,7 @@ public class Car extends Thread {
             mutex.acquire(); // lock access to queue
 
             queue.add(carTag);
+
             logCallback.accept(carTag + " entered the queue");
 
             mutex.release(); // release access

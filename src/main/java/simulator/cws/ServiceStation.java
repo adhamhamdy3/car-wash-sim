@@ -1,7 +1,6 @@
 package simulator.cws;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -56,6 +55,7 @@ public class ServiceStation {
             logCallback.accept("Simulation already running.");
             return;
         }
+
         running = true;
 
         logCallback.accept("Simulation started: Waiting area capacity " + empty.availablePermits()
@@ -110,10 +110,6 @@ public class ServiceStation {
         logCallback.accept("Simulation stopped.");
     }
 
-    public void setRunning(boolean flag) {
-        running = flag;
-    }
-
     public void reset() {
         stopSimulation();
         queue.clear();
@@ -129,36 +125,23 @@ public class ServiceStation {
         numPumps = 0;
     }
 
-    // Accessors - return unmodifiable views to avoid external mutation
-    public Queue<String> getQueue() {
-        return queue;
-    }
-
-    public List<Pump> getPumpsList() {
-        return Collections.unmodifiableList(pumpsList);
-    }
-
-    public List<Car> getCarsList() {
-        return Collections.unmodifiableList(carsList);
-    }
-
     public boolean isRunning() {
         return running;
     }
 
-    public int getNumPumps() {
-        return numPumps;
+    public int getWaitingAreaSize() {
+        return waitingAreaSize;
     }
 
     public int getCarCounter() {
         return carCounter;
     }
 
-    public int getWaitingAreaSize() {
-        return empty.availablePermits() + full.availablePermits(); // total capacity
+    public int getWaitingCars() {
+        return waitingAreaSize - empty.availablePermits();
     }
 
-    public int getTotalWaiting() {
-        return full.availablePermits(); // or track with AtomicInteger
+    public int getServicedCars() {
+        return numPumps - pumps.availablePermits();
     }
 }
