@@ -82,6 +82,7 @@ public class Pump extends Thread {
                 notifyOnCarFinishesService(car.getCarId());
 
                 pumps.release();
+                Thread.sleep(50L);
             }
         } catch (InterruptedException e) {
             notifyOnException(getTag() + " shutting down...");
