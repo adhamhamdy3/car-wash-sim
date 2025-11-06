@@ -5,16 +5,14 @@ import java.util.List;
 import java.util.Queue;
 
 public class Pump extends Thread {
-    private final int id;
-    private final Queue<String> queue;
-    private final Semaphore mutex, empty, full, pumps;
-    private final int pumpSpeed; // in seconds
+    private int id;
+    private Queue<Car> queue;
+    private Semaphore mutex, empty, full, pumps;
+    private int pumpSpeed; // in seconds
 
-    private final List<PumpObserver> observers;
+    private List<PumpObserver> observers;
 
-    private final String pumpTag;
-
-    public Pump(int id, Queue<String> queue, Semaphore mutex,
+    public Pump(int id, Queue<Car> queue, Semaphore mutex,
                 Semaphore empty, Semaphore full, Semaphore pumps,
                 int pumpSpeed) {
         this.id = id;
@@ -25,29 +23,27 @@ public class Pump extends Thread {
         this.pumps = pumps;
         this.pumpSpeed = pumpSpeed;
         this.observers = new ArrayList<>();
-
-        this.pumpTag = "Pump " + id;
     }
 
     public void addObserver(PumpObserver observer) {
         observers.add(observer);
     }
 
-    private void notifyOnCarLogins(String carTag) {
+    private void notifyOnCarLogins(int carId) {
         for (PumpObserver observer : observers) {
-            observer.onCarLogins(id, carTag);
+            observer.onCarLogins(id, carId);
         }
     }
 
-    private void notifyOnCarBeginsService(String carTag) {
+    private void notifyOnCarBeginsService(int carId) {
         for (PumpObserver observer : observers) {
-            observer.onCarBeginsService(id, carTag);
+            observer.onCarBeginsService(id, carId);
         }
     }
 
-    private void notifyOnCarFinishesService(String carTag) {
+    private void notifyOnCarFinishesService(int carId) {
         for (PumpObserver observer : observers) {
-            observer.onCarFinishesService(id, carTag);
+            observer.onCarFinishesService(id, carId);
         }
     }
 
@@ -57,39 +53,45 @@ public class Pump extends Thread {
         }
     }
 
-
     @Override
     public void run() {
         try {
             while (!isInterrupted()) {
-                // wait until there is at least one car
+                // wait for a car to be available
                 full.acquire();
+
                 mutex.acquire();
 
                 if (queue.isEmpty()) {
-                    // another pump might have taken it already
                     mutex.release();
                     continue;
                 }
 
-                String car = queue.remove();
-                notifyOnCarLogins(car);
-
+                Car car = queue.remove();
+                notifyOnCarLogins(car.getCarId());
                 mutex.release();
-                pumps.acquire(); // acquire a service bay
+                empty.release();
 
-                notifyOnCarBeginsService(car);
+                // acquire a pump bay
+                pumps.acquire();
 
-                Thread.sleep( pumpSpeed * 1000L); // simulate service time
+                notifyOnCarBeginsService(car.getCarId());
+                Thread.sleep(pumpSpeed * 1000L);
+                notifyOnCarFinishesService(car.getCarId());
 
-                notifyOnCarFinishesService(car);
-
-                pumps.release(); // release the bay
-                empty.release(); // signal empty space in queue
+                pumps.release();
             }
         } catch (InterruptedException e) {
-            notifyOnException(pumpTag + " shutting down...");
+            notifyOnException(getTag() + " shutting down...");
             Thread.currentThread().interrupt();
         }
+    }
+
+    public int getPumpId() {
+        return id;
+    }
+
+    public String getTag() {
+        return "P" + id;
     }
 }

@@ -40,7 +40,7 @@ public class MainController implements CarObserver, PumpObserver {
     // Service Station
     private ServiceStation station;
 
-    private final List<VBox> pumpCards = new ArrayList<>();
+    private List<VBox> pumpCards = new ArrayList<>();
 
     @FXML
     public void initialize() {
@@ -135,7 +135,8 @@ public class MainController implements CarObserver, PumpObserver {
             station = new ServiceStation(waitingAreaSize, numPumps);
             station.startSimulation(speedSpinner.getValue(), this);
 
-            log("Simulation started: Waiting area capacity " + waitingAreaSize + ", Pumps = " + numPumps);
+            log("Simulation started: Waiting area capacity " + waitingAreaSize + ", Pumps = " + numPumps +
+                    " and Service speed = " + speedSpinner.getValue() + "s");
 
             setupPumpCards(numPumps);
 
@@ -154,7 +155,7 @@ public class MainController implements CarObserver, PumpObserver {
         }
 
         station.addCar(this);
-        createCarCard();
+//        createCarCard();
     }
 
     private void stopSimulation() {
@@ -200,13 +201,6 @@ public class MainController implements CarObserver, PumpObserver {
 
             logArea.appendText("[" + timestamp + "] " + message + "\n");
 
-            // TODO: CHANGE THIS LOGIC
-            if (message.contains("begins service")) {
-                if(!queueContainer.getChildren().isEmpty()){
-                    queueContainer.getChildren().removeFirst();
-                }
-            }
-
             // Update labels
             queueStatusLabel.setText("Queue: " + station.getWaitingCars() + "/" + station.getWaitingAreaSize());
             arrivedLabel.setText("Total cars arrived: " + station.getCarCounter());
@@ -215,35 +209,48 @@ public class MainController implements CarObserver, PumpObserver {
         });
     }
 
-    // TODO: Call the UI method in the proper method below
     @Override
-    public void onCarLogins(int pumpId, String carTag) {
-        log(pumpId + ": " + carTag + " login");
+    public void onCarLogins(int pumpId, int carId) {
+        Platform.runLater(() -> {
+            log("P" + pumpId + ": C" + carId + " login");
+
+            // Modify queueContainer safely on the FX thread
+            if (!queueContainer.getChildren().isEmpty()) {
+                queueContainer.getChildren().removeFirst();
+            }
+        });
     }
 
     @Override
-    public void onCarBeginsService(int pumpId, String carTag) {
-        log(pumpId + ": " + carTag + " begins service at Bay " + pumpId);
+    public void onCarBeginsService(int pumpId, int carId) {
+        Platform.runLater(() ->
+                log("P" + pumpId + ": C" + carId + " begins service at Bay " + pumpId)
+        );
     }
 
     @Override
-    public void onCarFinishesService(int pumpId, String carTag) {
-        log(pumpId + ": " + carTag + " finishes service");
-        log(pumpId + ": Bay " + pumpId + " is now free");  // Changed carTag to pumpId
+    public void onCarFinishesService(int pumpId, int carId) {
+        Platform.runLater(() -> {
+            log("P" + pumpId + ": C" + carId + " finishes service");
+            log("P" + pumpId + ": Bay " + pumpId + " is now free");
+        });
     }
 
     @Override
-    public void onCarArrives(String carTag) {
-        log(carTag + " arrived");
+    public void onCarArrives(int carId) {
+        Platform.runLater(() -> log("C" + carId + " arrived"));
     }
 
     @Override
-    public void onCarEntersQueue(String carTag) {
-        log(carTag + " entered the queue");
+    public void onCarEntersQueue(int carId) {
+        Platform.runLater(() -> {
+            log("C" + carId + " entered the queue");
+             createCarCard();
+        });
     }
 
     @Override
     public void onException(String message) {
-        log(message);
+        Platform.runLater(() -> log(message));
     }
 }

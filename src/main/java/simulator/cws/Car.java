@@ -5,34 +5,31 @@ import java.util.List;
 import java.util.Queue;
 
 public class Car extends Thread {
-    private final int id;
-    private final Queue<String> queue;
-    private final Semaphore mutex, empty, full;
-    private final String carTag;
+    private int id;
+    private Queue<Car> queue;
+    private Semaphore mutex, empty, full;
 
-    private final List<CarObserver> observers;
+    private List<CarObserver> observers;
 
-    public Car(int id, Queue<String> queue, Semaphore mutex, Semaphore empty, Semaphore full) {
+    public Car(int id, Queue<Car> queue, Semaphore mutex, Semaphore empty, Semaphore full) {
         this.id = id;
         this.queue = queue;
         this.mutex = mutex;
         this.empty = empty;
         this.full = full;
         this.observers = new ArrayList<>();
-
-        this.carTag = "C" + this.id;
     }
 
     public void addObserver(CarObserver observer) {
         observers.add(observer);
     }
 
-    private void notifyOnCarArrives(String carTag) {
-        for (CarObserver o : observers) o.onCarArrives(carTag);
+    private void notifyOnCarArrives(int carId) {
+        for (CarObserver o : observers) o.onCarArrives(carId);
     }
 
-    private void notifyOnCarEntersQueue(String carTag) {
-        for (CarObserver o : observers) o.onCarEntersQueue(carTag);
+    private void notifyOnCarEntersQueue(int carId) {
+        for (CarObserver o : observers) o.onCarEntersQueue(carId);
     }
 
     private void notifyOnException(String message) {
@@ -42,22 +39,30 @@ public class Car extends Thread {
     @Override
     public void run() {
         try {
-            notifyOnCarArrives(carTag);
+            notifyOnCarArrives(id);
 
             empty.acquire(); // wait for empty space
             mutex.acquire(); // lock access to queue
 
-            queue.add(carTag);
-            notifyOnCarEntersQueue(carTag);
+            queue.add(this);
+            notifyOnCarEntersQueue(id);
 
             mutex.release(); // release access
             full.release(); // signal that an item is available
 
         } catch (InterruptedException e) {
-            notifyOnException(carTag + " interrupted and leaving the station...");
+            notifyOnException("C" + id + " interrupted and leaving the station...");
             Thread.currentThread().interrupt(); // restore interrupt status
         } catch (Exception e) {
-            notifyOnException(carTag + " encountered an error: " + e.getMessage());
+            notifyOnException("C" + id + " encountered an error: " + e.getMessage());
         }
+    }
+
+    public int getCarId() {
+        return id;
+    }
+
+    public String getTag() {
+        return "C" + id;
     }
 }

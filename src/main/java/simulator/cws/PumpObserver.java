@@ -1,8 +1,8 @@
 package simulator.cws;
 
 public interface PumpObserver {
-    void onCarLogins(int pumpId, String carTag);
-    void onCarBeginsService(int pumpId, String carTag);
-    void onCarFinishesService(int pumpId, String carTag);
+    void onCarLogins(int pumpId, int carId);
+    void onCarBeginsService(int pumpId, int carId);
+    void onCarFinishesService(int pumpId, int carId);
     void onException(String message);
 }

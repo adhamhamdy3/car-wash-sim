@@ -6,17 +6,14 @@ import java.util.List;
 import java.util.Queue;
 
 public class ServiceStation {
-    private final Queue<String> queue;
-    private final Semaphore mutex;
-    private final Semaphore empty;
-    private final Semaphore full;
-    private final Semaphore pumps;
+    private Queue<Car> queue;
+    private Semaphore mutex, empty, full, pumps;
 
-    private final List<Pump> pumpsList;
-    private final List<Car> carsList;
+    private List<Pump> pumpsList;
+    private List<Car> carsList;
+    private int waitingAreaSize;
 
     private int numPumps;
-    private int waitingAreaSize;
     private int carCounter = 0;
 
     private volatile boolean running = false;
@@ -86,17 +83,23 @@ public class ServiceStation {
 
     public void reset() {
         stopSimulation();
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
         queue.clear();
-
-        mutex.setPermits(1);
-        empty.setPermits(waitingAreaSize);
-        full.setPermits(0);
-        pumps.setPermits(numPumps);
-
         pumpsList.clear();
         carsList.clear();
 
-        numPumps = 0;
+        carCounter = 0;
+        running = false;
+
+        mutex = new Semaphore(1);
+        empty = new Semaphore(waitingAreaSize);
+        full = new Semaphore(0);
+        pumps = new Semaphore(numPumps);
     }
 
     public boolean isRunning() {
@@ -112,7 +115,7 @@ public class ServiceStation {
     }
 
     public int getWaitingCars() {
-        return waitingAreaSize - empty.availablePermits();
+        return queue.size();
     }
 
     public int getServicedCars() {
