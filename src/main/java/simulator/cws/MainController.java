@@ -108,10 +108,10 @@ public class MainController implements CarObserver, PumpObserver {
             // Create a VBox to hold the car image and label
             VBox carBox = new VBox(5);
             carBox.setAlignment(javafx.geometry.Pos.CENTER);
-            carBox.setUserData(Integer.valueOf(carId));
+            carBox.setUserData(carId);
 
 
-            int imageNumber = (carId) % 8 + 1;
+            int imageNumber = (carId - 1) % 8 + 1;
             String imagePath = "/simulator/cws/assets/" + imageNumber + ".png";
 
             // Load the car image
