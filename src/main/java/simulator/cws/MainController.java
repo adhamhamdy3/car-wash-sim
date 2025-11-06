@@ -11,8 +11,10 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.text.Text;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
-public class MainController {
+public class MainController implements CarObserver, PumpObserver {
     @FXML private Label queueStatusLabel;
     @FXML private TextField capacityField;
     @FXML private TextField pumpsField;
@@ -38,6 +40,8 @@ public class MainController {
     // Service Station
     private ServiceStation station;
 
+    private final List<VBox> pumpCards = new ArrayList<>();
+
     @FXML
     public void initialize() {
         // Hook up buttons
@@ -54,25 +58,31 @@ public class MainController {
         // visual changes to pump cards
         Platform.runLater(() -> {
             pumpsContainer.getChildren().clear();
+            pumpCards.clear();
+
             for (int i = 1; i <= numPumps; i++) {
                 VBox pumpCard = new VBox(5);
                 pumpCard.getStyleClass().add("pump-card");
                 pumpCard.setPrefWidth(210);
                 pumpCard.setPrefHeight(150);
-                pumpCard.setStyle("-fx-alignment: center; -fx-background-color: #f7f7f7; -fx-padding: 10; -fx-border-color: #ccc; -fx-border-radius: 10; -fx-background-radius: 10;");
+                pumpCard.setStyle("-fx-alignment: center; -fx-background-color: #f7f7f7; "
+                        + "-fx-padding: 10; -fx-border-color: #ccc; -fx-border-radius: 10; "
+                        + "-fx-background-radius: 10;");
 
                 // Pump image
-                ImageView pumpImage = new ImageView(new Image(getClass().getResource("/simulator/cws/assets/pump.png").toExternalForm()));
+                ImageView pumpImage = new ImageView(
+                        new Image(getClass().getResource("/simulator/cws/assets/pump.png").toExternalForm()));
                 pumpImage.setFitWidth(80);
                 pumpImage.setFitHeight(80);
 
                 // Light indicator (start as green)
-                ImageView lightImage = new ImageView(new Image(getClass().getResource("/simulator/cws/assets/green.png").toExternalForm()));
+                ImageView lightImage = new ImageView(
+                        new Image(getClass().getResource("/simulator/cws/assets/green.png").toExternalForm()));
                 lightImage.setFitWidth(48);
                 lightImage.setFitHeight(19);
 
                 // Countdown label
-                Label countdownLabel = new Label("0s");
+                Label countdownLabel = new Label(speedSpinner.getValue().toString() + "s");
                 countdownLabel.getStyleClass().add("countdown-label");
 
                 // Pump label
@@ -84,9 +94,12 @@ public class MainController {
                 topBar.setStyle("-fx-alignment: center;");
 
                 pumpCard.getChildren().addAll(topBar, pumpImage, pumpLabel);
+
                 pumpsContainer.getChildren().add(pumpCard);
+                pumpCards.add(pumpCard); // save for later reference
             }
         });
+
     }
 
     void createCarCard() {
@@ -119,8 +132,10 @@ public class MainController {
             int waitingAreaSize = Integer.parseInt(capacityField.getText());
             int numPumps = Integer.parseInt(pumpsField.getText());
 
-            station = new ServiceStation(waitingAreaSize, numPumps, this::log);
-            station.startSimulation(speedSpinner.getValue());
+            station = new ServiceStation(waitingAreaSize, numPumps);
+            station.startSimulation(speedSpinner.getValue(), this);
+
+            log("Simulation started: Waiting area capacity " + waitingAreaSize + ", Pumps = " + numPumps);
 
             setupPumpCards(numPumps);
 
@@ -138,8 +153,7 @@ public class MainController {
             return;
         }
 
-        station.addCar();
-
+        station.addCar(this);
         createCarCard();
     }
 
@@ -157,6 +171,7 @@ public class MainController {
 
         logArea.clear();
         queueContainer.getChildren().clear();
+        pumpsContainer.getChildren().clear();
         startBtn.setDisable(false);
         addCarButton.setDisable(false);
         stopBtn.setDisable(true);
@@ -174,15 +189,16 @@ public class MainController {
         Platform.runLater(() -> {
             String timestamp = LocalTime.now().format(DateTimeFormatter.ofPattern("hh:mm:ss a"));
 
-            logArea.appendText("[" + timestamp + "] " + message + "\n");
-
             // TODO: CHANGE THIS LOGIC
             if(station.getWaitingCars() >= station.getWaitingAreaSize()) {
                 addCarButton.setDisable(true);
-                log("Reached maximum capacity."); // careful: recursive log can be repeated
+                 logArea.appendText("Reached maximum capacity.");
+                return;
             } else {
                 addCarButton.setDisable(false);
             }
+
+            logArea.appendText("[" + timestamp + "] " + message + "\n");
 
             // TODO: CHANGE THIS LOGIC
             if (message.contains("begins service")) {
@@ -199,5 +215,35 @@ public class MainController {
         });
     }
 
+    // TODO: Call the UI method in the proper method below
+    @Override
+    public void onCarLogins(int pumpId, String carTag) {
+        log(pumpId + ": " + carTag + " login");
+    }
 
+    @Override
+    public void onCarBeginsService(int pumpId, String carTag) {
+        log(pumpId + ": " + carTag + " begins service at Bay " + pumpId);
+    }
+
+    @Override
+    public void onCarFinishesService(int pumpId, String carTag) {
+        log(pumpId + ": " + carTag + " finishes service");
+        log(pumpId + ": Bay " + pumpId + " is now free");  // Changed carTag to pumpId
+    }
+
+    @Override
+    public void onCarArrives(String carTag) {
+        log(carTag + " arrived");
+    }
+
+    @Override
+    public void onCarEntersQueue(String carTag) {
+        log(carTag + " entered the queue");
+    }
+
+    @Override
+    public void onException(String message) {
+        log(message);
+    }
 }

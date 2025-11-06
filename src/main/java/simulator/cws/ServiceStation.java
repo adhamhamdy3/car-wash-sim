@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import java.util.function.Consumer;
 
 public class ServiceStation {
     private final Queue<String> queue;
@@ -20,19 +19,14 @@ public class ServiceStation {
     private int waitingAreaSize;
     private int carCounter = 0;
 
-    private final Consumer<String> logCallback;
-
     private volatile boolean running = false;
 
-    public ServiceStation(int waitingAreaSize, int numPumps, Consumer<String> logCallback) {
+    public ServiceStation(int waitingAreaSize, int numPumps) {
         if (waitingAreaSize < 0) {
             throw new IllegalArgumentException("waitingAreaSize must be >= 0");
         }
         if (numPumps <= 0) {
             throw new IllegalArgumentException("numPumps must be > 0");
-        }
-        if (logCallback == null) {
-            throw new IllegalArgumentException("logCallback must not be null");
         }
 
         this.queue = new LinkedList<>();
@@ -45,52 +39,34 @@ public class ServiceStation {
         this.carsList = new ArrayList<>();
 
         this.numPumps = numPumps;
-        this.logCallback = logCallback;
         this.waitingAreaSize = waitingAreaSize;
     }
 
     // Called from controller when user clicks "Start Simulation"
-    public void startSimulation(int pumpSpeed) {
-        if (running) {
-            logCallback.accept("Simulation already running.");
-            return;
-        }
-
+    public void startSimulation(int pumpSpeed, PumpObserver pumpObserver) {
         running = true;
-
-        logCallback.accept("Simulation started: Waiting area capacity " + empty.availablePermits()
-                + ", Pumps = " + numPumps);
 
         // create and start pump threads
         for (int i = 1; i <= numPumps; i++) {
-            Pump pump = new Pump(i, queue, mutex, empty, full, pumps, pumpSpeed, logCallback);
+            Pump pump = new Pump(i, queue, mutex, empty, full, pumps, pumpSpeed);
+            pump.addObserver(pumpObserver);
             pumpsList.add(pump);
             pump.start();
         }
     }
 
     // Called from controller when user clicks "Add Car"
-    public void addCar() {
-        if (!running) {
-            logCallback.accept("Please start the simulation first!");
-            return;
-        }
-
+    public void addCar(CarObserver carObserver) {
         carCounter++;
-        String carTag = "C" + carCounter;
-        logCallback.accept(carTag + " arrived");
 
-        Car car = new Car(carCounter, queue, mutex, empty, full, logCallback);
+        Car car = new Car(carCounter, queue, mutex, empty, full);
+        car.addObserver(carObserver);
         carsList.add(car);
         car.start();
     }
 
     // Stop simulation and try to stop threads cleanly
     public void stopSimulation() {
-        if (!running) {
-            logCallback.accept("Simulation is not running.");
-            return;
-        }
         running = false;
 
         // attempt to stop cars
@@ -106,8 +82,6 @@ public class ServiceStation {
                 pump.interrupt();
             } catch (Exception ignored) {}
         }
-
-        logCallback.accept("Simulation stopped.");
     }
 
     public void reset() {

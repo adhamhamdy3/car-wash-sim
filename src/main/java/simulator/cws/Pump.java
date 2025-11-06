@@ -3,31 +3,60 @@ package simulator.cws;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
-import java.util.function.Consumer;
 
 public class Pump extends Thread {
     private final int id;
     private final Queue<String> queue;
     private final Semaphore mutex, empty, full, pumps;
-    private final Consumer<String> logCallback;
     private final int pumpSpeed; // in seconds
+
+    private final List<PumpObserver> observers;
 
     private final String pumpTag;
 
     public Pump(int id, Queue<String> queue, Semaphore mutex,
                 Semaphore empty, Semaphore full, Semaphore pumps,
-                int pumpSpeed, Consumer<String> logCallback) {
+                int pumpSpeed) {
         this.id = id;
         this.queue = queue;
         this.mutex = mutex;
         this.empty = empty;
         this.full = full;
         this.pumps = pumps;
-        this.logCallback = logCallback;
         this.pumpSpeed = pumpSpeed;
+        this.observers = new ArrayList<>();
 
         this.pumpTag = "Pump " + id;
     }
+
+    public void addObserver(PumpObserver observer) {
+        observers.add(observer);
+    }
+
+    private void notifyOnCarLogins(String carTag) {
+        for (PumpObserver observer : observers) {
+            observer.onCarLogins(id, carTag);
+        }
+    }
+
+    private void notifyOnCarBeginsService(String carTag) {
+        for (PumpObserver observer : observers) {
+            observer.onCarBeginsService(id, carTag);
+        }
+    }
+
+    private void notifyOnCarFinishesService(String carTag) {
+        for (PumpObserver observer : observers) {
+            observer.onCarFinishesService(id, carTag);
+        }
+    }
+
+    private void notifyOnException(String message) {
+        for (PumpObserver observer : observers) {
+            observer.onException(message);
+        }
+    }
+
 
     @Override
     public void run() {
@@ -44,22 +73,22 @@ public class Pump extends Thread {
                 }
 
                 String car = queue.remove();
-                logCallback.accept(pumpTag + ": " + car + " login");
+                notifyOnCarLogins(car);
 
                 mutex.release();
                 pumps.acquire(); // acquire a service bay
 
-                logCallback.accept(pumpTag + ": " + car + " begins service at Bay " + id);
+                notifyOnCarBeginsService(car);
+
                 Thread.sleep( pumpSpeed * 1000L); // simulate service time
 
-                logCallback.accept(pumpTag + ": " + car + " finishes service");
-                logCallback.accept(pumpTag + ": Bay " + id + " is now free");
+                notifyOnCarFinishesService(car);
 
                 pumps.release(); // release the bay
                 empty.release(); // signal empty space in queue
             }
         } catch (InterruptedException e) {
-            logCallback.accept(pumpTag + " shutting down...");
+            notifyOnException(pumpTag + " shutting down...");
             Thread.currentThread().interrupt();
         }
     }
