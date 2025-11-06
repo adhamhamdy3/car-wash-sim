@@ -160,6 +160,13 @@ public class MainController implements CarObserver, PumpObserver {
         logArea.clear();
     }
 
+    public void updateLabels(){
+        // Update labels
+        queueStatusLabel.setText("Queue: " + station.getWaitingCars() + "/" + station.getWaitingAreaSize());
+        arrivedLabel.setText("Total cars arrived: " + station.getCarCounter());
+        servicedLabel.setText("Cars serviced: " + station.getServicedCars());
+        waitingLabel.setText("Cars waiting: " + station.getWaitingCars());
+    }
     // Helper to safely log from any thread
     public void log(String message) {
         Platform.runLater(() -> {
@@ -168,19 +175,16 @@ public class MainController implements CarObserver, PumpObserver {
             // TODO: CHANGE THIS LOGIC
             if(station.getWaitingCars() >= station.getWaitingAreaSize()) {
                 addCarButton.setDisable(true);
+                updateLabels();
                  logArea.appendText("Reached maximum capacity.");
+
                 return;
             } else {
                 addCarButton.setDisable(false);
             }
 
             logArea.appendText("[" + timestamp + "] " + message + "\n");
-
-            // Update labels
-            queueStatusLabel.setText("Queue: " + station.getWaitingCars() + "/" + station.getWaitingAreaSize());
-            arrivedLabel.setText("Total cars arrived: " + station.getCarCounter());
-            servicedLabel.setText("Cars serviced: " + station.getServicedCars());
-            waitingLabel.setText("Cars waiting: " + station.getWaitingCars());
+            updateLabels();
         });
     }
 
