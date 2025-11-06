@@ -102,14 +102,16 @@ public class MainController implements CarObserver, PumpObserver {
 
     }
 
-    void createCarCard() {
+    void createCarCard(int carId) {
         Platform.runLater(() -> {
             // Create a VBox to hold the car image and label
             VBox carBox = new VBox(5);
             carBox.setAlignment(javafx.geometry.Pos.CENTER);
+            carBox.setUserData(Integer.valueOf(carId));
+
 
             // Cycle through 1.png–8.png for car images
-            int imageNumber = (station.getCarCounter()) % 8 + 1;
+            int imageNumber = (carId) % 8 + 1;
             String imagePath = "/simulator/cws/assets/" + imageNumber + ".png";
 
             // Load the car image
@@ -118,7 +120,7 @@ public class MainController implements CarObserver, PumpObserver {
             carImage.setFitHeight(90);
 
             // Label under the car image (C1, C2, ...)
-            Text carLabel = new Text("C" + station.getCarCounter());
+            Text carLabel = new Text("C" + carId);
 
             carBox.getChildren().addAll(carImage, carLabel);
 
@@ -155,7 +157,6 @@ public class MainController implements CarObserver, PumpObserver {
         }
 
         station.addCar(this);
-//        createCarCard();
     }
 
     private void stopSimulation() {
@@ -209,23 +210,27 @@ public class MainController implements CarObserver, PumpObserver {
         });
     }
 
+    private void removeCarCard(int carId) {
+        queueContainer.getChildren().removeIf(node -> {
+            Object id = node.getUserData();
+            return id != null && id.equals(carId);
+        });
+    }
+
     @Override
     public void onCarLogins(int pumpId, int carId) {
         Platform.runLater(() -> {
             log("P" + pumpId + ": C" + carId + " login");
 
-            // Modify queueContainer safely on the FX thread
-            if (!queueContainer.getChildren().isEmpty()) {
-                queueContainer.getChildren().removeFirst();
-            }
+            removeCarCard(carId);
         });
     }
 
     @Override
     public void onCarBeginsService(int pumpId, int carId) {
-        Platform.runLater(() ->
-                log("P" + pumpId + ": C" + carId + " begins service at Bay " + pumpId)
-        );
+        Platform.runLater(() -> {
+            log("P" + pumpId + ": C" + carId + " begins service at Bay " + pumpId);
+        });
     }
 
     @Override
@@ -233,6 +238,8 @@ public class MainController implements CarObserver, PumpObserver {
         Platform.runLater(() -> {
             log("P" + pumpId + ": C" + carId + " finishes service");
             log("P" + pumpId + ": Bay " + pumpId + " is now free");
+
+            removeCarCard(carId);
         });
     }
 
@@ -245,7 +252,7 @@ public class MainController implements CarObserver, PumpObserver {
     public void onCarEntersQueue(int carId) {
         Platform.runLater(() -> {
             log("C" + carId + " entered the queue");
-             createCarCard();
+             createCarCard(carId);
         });
     }
 
