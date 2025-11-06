@@ -1,11 +1,14 @@
 package simulator.cws.ui;
 
+import javafx.animation.Timeline;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
+import javafx.animation.KeyFrame;
 import simulator.cws.utlils.Helper;
 
 public class PumpCard extends VBox {
@@ -19,15 +22,16 @@ public class PumpCard extends VBox {
     private VBox carBox;
     private Label pumpLabel;
     private Label countDownlabel;
-
+    private int countDown = 0;
+    private Timeline timeline = new Timeline();
     private Helper helper;
 
-    public PumpCard(int pumpId) {
+    public PumpCard(int pumpId, int countDown2) {
         super(10);
         helper = new Helper();
 
         this.pumpId = pumpId;
-
+        this.countDown = countDown2;
         setStyle("-fx-border-color: #23ce6b; -fx-border-radius: 8;-fx-border-width: 1; -fx-padding: 10; -fx-alignment: center; -fx-background-color: rgba(254,246,239,0.88);");
         setPrefWidth(180);
 
@@ -40,7 +44,15 @@ public class PumpCard extends VBox {
         lightImage.setFitHeight(24);
         HBox.setMargin(lightImage, new Insets(0, 0, 0, 7));
 
-        countDownlabel = new Label(pumpId + "s");
+        // count down
+        countDownlabel = new Label(countDown + "s");
+        for (int i = countDown - 1; i >= 0; i--) {
+            int value = i;
+            timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(countDown - i), e -> {
+                String v = value + "s";
+                countDownlabel.setText(v);
+            }));
+        }
         topBar.getChildren().addAll(lightImage, countDownlabel);
 
         // === Middle row: Pump + Car ===
@@ -58,7 +70,7 @@ public class PumpCard extends VBox {
 
         serviceRow.getChildren().addAll(pumpImage, carBox);
 
-        pumpLabel = new Label("Pump " + pumpLabel);
+        pumpLabel = new Label("Pump " + pumpId);
         pumpLabel.setStyle("-fx-alignment: left;");
 
         // === Add everything to the card ===
@@ -80,6 +92,10 @@ public class PumpCard extends VBox {
 
         // Clear previous car visuals (if any)
         carBox.getChildren().clear();
+    }
+    public void startCD(int cd){
+        countDownlabel.setText(cd + "s");
+        timeline.play();
     }
 
     public void setCarImage(int carId) {

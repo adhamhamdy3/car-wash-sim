@@ -61,7 +61,7 @@ public class MainController implements CarObserver, PumpObserver {
             pumpCards.clear();
 
             for (int i = 1; i <= numPumps; i++) {
-                PumpCard pumpCard = new PumpCard(i);
+                PumpCard pumpCard = new PumpCard(i, speedSpinner.getValue());
 
                 // Save references
                 pumpCards.put(i, pumpCard);
@@ -82,12 +82,14 @@ public class MainController implements CarObserver, PumpObserver {
     // When a pump starts servicing a car
     public void startServiceVisual(int pumpId, int carId) {
         Platform.runLater(() -> {
+            removeCarCard(carId);
+
             PumpCard pumpCard = pumpCards.get(pumpId);
             if (pumpCard == null) return;
-
             pumpCard.setLightColor("red");
-
+            pumpCard.startCD(speedSpinner.getValue());
             pumpCard.setCarImage(carId);
+
         });
     }
 
@@ -210,8 +212,6 @@ public class MainController implements CarObserver, PumpObserver {
         Platform.runLater(() -> {
             log("P" + pumpId + ": C" + carId + " finishes service");
             log("P" + pumpId + ": Bay " + pumpId + " is now free");
-
-            removeCarCard(carId); // double check
             finishServiceVisual(pumpId);
         });
     }

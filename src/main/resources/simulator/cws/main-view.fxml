@@ -25,7 +25,7 @@
                     <Label styleClass="top-label" text="Number of pumps:" />
                     <TextField fx:id="pumpsField" prefWidth="60" promptText="e.g. 3" styleClass="top-input" />
 
-                    <Label styleClass="top-label" text="Service pumps speed:" />
+                    <Label styleClass="top-label" text="Pumps Service time:" />
                     <Spinner fx:id="speedSpinner" editable="true" prefHeight="23.0" prefWidth="74.0" />
 
                     <Separator orientation="VERTICAL" prefHeight="25.0" />
@@ -49,9 +49,9 @@
                         <Button fx:id="addCarButton" styleClass="addCarButton" text="Add Car" />
                     </children>
                 </HBox>
-                <ScrollPane fitToHeight="false" fitToWidth="true" hbarPolicy="NEVER" minHeight="150" styleClass="pumps-scroll" vbarPolicy="AS_NEEDED" VBox.vgrow="SOMETIMES">
+                <ScrollPane fitToHeight="false" fitToWidth="true" hbarPolicy="NEVER" minHeight="195" styleClass="pumps-scroll" vbarPolicy="AS_NEEDED" VBox.vgrow="SOMETIMES">
                     <content>
-                        <FlowPane fx:id="queueContainer" hgap="10" styleClass="queue-container" vgap="15" />
+                        <FlowPane fx:id="queueContainer" hgap="12" minHeight="195" styleClass="queue-container" vgap="10" />
                     </content>
                 </ScrollPane>
                 <Label fx:id="queueStatusLabel" styleClass="queue-status" text="Queue: 0/0" />
