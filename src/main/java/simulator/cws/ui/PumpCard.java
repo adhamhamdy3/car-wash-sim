@@ -26,12 +26,12 @@ public class PumpCard extends VBox {
     private Timeline timeline = new Timeline();
     private Helper helper;
 
-    public PumpCard(int pumpId, int countDown2) {
+    public PumpCard(int pumpId, int countDown) {
         super(10);
         helper = new Helper();
 
         this.pumpId = pumpId;
-        this.countDown = countDown2;
+        this.countDown = countDown;
         setStyle("-fx-border-color: #23ce6b; -fx-border-radius: 8;-fx-border-width: 1; -fx-padding: 10; -fx-alignment: center; -fx-background-color: rgba(254,246,239,0.88);");
         setPrefWidth(180);
 
@@ -45,10 +45,10 @@ public class PumpCard extends VBox {
         HBox.setMargin(lightImage, new Insets(0, 0, 0, 7));
 
         // count down
-        countDownlabel = new Label(countDown + "s");
-        for (int i = countDown - 1; i >= 0; i--) {
+        countDownlabel = new Label(this.countDown + "s");
+        for (int i = this.countDown - 1; i >= 0; i--) {
             int value = i;
-            timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(countDown - i), e -> {
+            timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(this.countDown - i), e -> {
                 String v = value + "s";
                 countDownlabel.setText(v);
             }));
@@ -89,13 +89,19 @@ public class PumpCard extends VBox {
             lightImage.setImage(new Image(getClass().getResource("/simulator/cws/assets/green.png").toExternalForm()));
             this.setStyle("-fx-border-color: #23ce6b; -fx-border-radius: 6; -fx-border-width: 2; -fx-padding: 10; -fx-alignment: center; -fx-background-color: rgba(254,246,239,0.88);");
         }
+    }
 
-        // Clear previous car visuals (if any)
+    public void clearCarVisual() {
         carBox.getChildren().clear();
     }
+
     public void startCD(int cd){
         countDownlabel.setText(cd + "s");
         timeline.play();
+    }
+
+    public void resetCD() {
+        countDownlabel.setText(countDown + "s");
     }
 
     public void setCarImage(int carId) {
