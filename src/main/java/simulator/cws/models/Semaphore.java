@@ -1,4 +1,4 @@
-package simulator.cws;
+package simulator.cws.models;
 
 public class Semaphore {
     private int permits;

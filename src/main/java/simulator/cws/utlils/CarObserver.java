@@ -1,4 +1,4 @@
-package simulator.cws;
+package simulator.cws.utlils;
 
 public interface CarObserver {
     void onCarArrives(int carId);

@@ -12,4 +12,10 @@ module simulator.cws {
 
     opens simulator.cws to javafx.fxml;
     exports simulator.cws;
+    exports simulator.cws.ui;
+    opens simulator.cws.ui to javafx.fxml;
+    exports simulator.cws.models;
+    opens simulator.cws.models to javafx.fxml;
+    exports simulator.cws.utlils;
+    opens simulator.cws.utlils to javafx.fxml;
 }

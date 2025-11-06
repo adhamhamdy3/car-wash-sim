@@ -1,4 +1,6 @@
-package simulator.cws;
+package simulator.cws.models;
+
+import simulator.cws.utlils.CarObserver;
 
 import java.util.ArrayList;
 import java.util.List;

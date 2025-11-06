@@ -1,4 +1,4 @@
-package simulator.cws;
+package simulator.cws.utlils;
 
 public interface PumpObserver {
     void onCarLogins(int pumpId, int carId);

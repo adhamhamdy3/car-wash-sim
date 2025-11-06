@@ -2,19 +2,17 @@ package simulator.cws;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.text.Text;
+import simulator.cws.models.ServiceStation;
+import simulator.cws.ui.CarCard;
+import simulator.cws.ui.PumpCard;
+import simulator.cws.utlils.CarObserver;
+import simulator.cws.utlils.PumpObserver;
+
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class MainController implements CarObserver, PumpObserver {
@@ -43,7 +41,7 @@ public class MainController implements CarObserver, PumpObserver {
     // Service Station
     private ServiceStation station;
 
-    private final Map<Integer, VBox> pumpCards = new HashMap<>();
+    private final Map<Integer, PumpCard> pumpCards = new HashMap<>();
 
     @FXML
     public void initialize() {
@@ -60,41 +58,10 @@ public class MainController implements CarObserver, PumpObserver {
     void setupPumpCards(int numPumps) {
         Platform.runLater(() -> {
             pumpsContainer.getChildren().clear();
+            pumpCards.clear();
+
             for (int i = 1; i <= numPumps; i++) {
-                VBox pumpCard = new VBox(10);
-                pumpCard.setStyle("-fx-border-color: #23ce6b; -fx-border-radius: 8;-fx-border-width: 1; -fx-padding: 10; -fx-alignment: center; -fx-background-color: rgba(254,246,239,0.88);");
-                pumpCard.setPrefWidth(180);
-
-                // === Top bar: Light + Label ===
-                HBox topBar = new HBox(10);
-                topBar.setStyle("-fx-alignment: center-left; -fx-end-margin: 10;");
-                ImageView light = new ImageView(new Image(getClass().getResource("/simulator/cws/assets/green.png").toExternalForm()));
-                light.setFitWidth(57);
-                light.setFitHeight(24);
-                HBox.setMargin(light, new Insets(0, 0, 0, 7));
-                Label countDownlabel = new Label(i + "s");
-                topBar.getChildren().addAll(light, countDownlabel);
-
-                // === Middle row: Pump + Car ===
-                HBox serviceRow = new HBox(10);
-                serviceRow.setStyle("-fx-alignment: center;");
-
-                // Pump image
-                ImageView pumpImage = new ImageView(new Image(getClass().getResource("/simulator/cws/assets/pump.png").toExternalForm()));
-                pumpImage.setFitWidth(100);
-                pumpImage.setFitHeight(100);
-
-                Label pumplabel = new Label("Pump " + i);
-                pumplabel.setStyle("-fx-alignment: left;");
-                // Placeholder (empty) car box — we’ll fill it later when a car arrives
-                VBox carBox = new VBox(5);
-                carBox.setStyle("-fx-alignment: center;");
-                carBox.setPrefWidth(90);
-
-                serviceRow.getChildren().addAll(pumpImage, carBox);
-
-                // === Add everything to the card ===
-                pumpCard.getChildren().addAll(topBar, serviceRow, pumplabel);
+                PumpCard pumpCard = new PumpCard(i);
 
                 // Save references
                 pumpCards.put(i, pumpCard);
@@ -105,91 +72,32 @@ public class MainController implements CarObserver, PumpObserver {
 
     void createCarCard(int carId) {
         Platform.runLater(() -> {
-            // Create a VBox to hold the car image and label
-            VBox carBox = new VBox(5);
-            carBox.setAlignment(javafx.geometry.Pos.CENTER);
-            carBox.setUserData(carId);
-
-
-            int imageNumber = (carId - 1) % 8 + 1;
-            String imagePath = "/simulator/cws/assets/" + imageNumber + ".png";
-
-            // Load the car image
-            ImageView carImage = new ImageView(new Image(getClass().getResourceAsStream(imagePath)));
-            carImage.setFitWidth(110);
-            carImage.setFitHeight(110);
-
-            // Label under the car image (C1, C2, ...)
-            Text carLabel = new Text("C" + carId);
-
-            carBox.getChildren().addAll(carImage, carLabel);
+            CarCard carCard = new CarCard(carId);
 
             // Add the car box to the FlowPane queueContainer
-            queueContainer.getChildren().add(carBox);
+            queueContainer.getChildren().add(carCard);
         });
     }
 
     // When a pump starts servicing a car
-    public void startServiceVisual(int pumpId, String carTag) {
+    public void startServiceVisual(int pumpId, int carId) {
         Platform.runLater(() -> {
-            if(!queueContainer.getChildren().isEmpty()){
-                queueContainer.getChildren().removeFirst();
-            }
-            VBox pumpCard = pumpCards.get(pumpId);
+            PumpCard pumpCard = pumpCards.get(pumpId);
             if (pumpCard == null) return;
 
-            // Top bar: set red light
-            HBox topBar = (HBox) pumpCard.getChildren().get(0);
-            ImageView light = (ImageView) topBar.getChildren().get(0);
-            light.setImage(new Image(getClass().getResource("/simulator/cws/assets/red.png").toExternalForm()));
-            pumpCard.setStyle("-fx-border-color: #d90707; -fx-border-radius: 6; -fx-border-width: 2; " +
-                    "-fx-padding: 10; -fx-alignment: center; -fx-background-color: rgba(254,246,239,0.88);");
-            // Middle row: find carBox
-            HBox serviceRow = (HBox) pumpCard.getChildren().get(1);
-            VBox carBox = (VBox) serviceRow.getChildren().get(1);
+            pumpCard.setLightColor("red");
 
-            // Clear previous car visuals (if any)
-            carBox.getChildren().clear();
-
-            // Determine image path based on car number
-            String carNum = carTag.replaceAll("[^0-9]", "");
-            int carIndex = ((Integer.parseInt(carNum) - 1) % 8) + 1;
-            String imagePath = "/simulator/cws/assets/" + carIndex + ".png";
-
-            // Load car image
-            Image carImage;
-            try {
-                carImage = new Image(getClass().getResource(imagePath).toExternalForm());
-            } catch (Exception e) {
-                carImage = new Image(getClass().getResource("/simulator/cws/assets/1.png").toExternalForm());
-            }
-
-            ImageView carImageView = new ImageView(carImage);
-            carImageView.setFitWidth(100);
-            carImageView.setFitHeight(100);
-
-            Label carLabel = new Label(carTag);
-            carLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: #333;");
-
-            carBox.getChildren().addAll(carImageView, carLabel);
+            pumpCard.setCarImage(carId);
         });
     }
 
     // When a pump finishes servicing a car
     public void finishServiceVisual(int pumpId) {
         Platform.runLater(() -> {
-            VBox pumpCard = pumpCards.get(pumpId);
+            PumpCard pumpCard = pumpCards.get(pumpId);
             if (pumpCard == null) return;
 
-            // Turn light back to green
-            HBox topBar = (HBox) pumpCard.getChildren().get(0);
-            ImageView light = (ImageView) topBar.getChildren().get(0);
-            light.setImage(new Image(getClass().getResource("/simulator/cws/assets/green.png").toExternalForm()));
-            pumpCard.setStyle("-fx-border-color: #23ce6b; -fx-border-radius: 6; -fx-border-width: 2; -fx-padding: 10; -fx-alignment: center; -fx-background-color: rgba(254,246,239,0.88);");
-            // Clear the car box
-            HBox serviceRow = (HBox) pumpCard.getChildren().get(1);
-            VBox carBox = (VBox) serviceRow.getChildren().get(1);
-            carBox.getChildren().clear();
+            pumpCard.setLightColor("green");
         });
     }
 
@@ -286,7 +194,7 @@ public class MainController implements CarObserver, PumpObserver {
         Platform.runLater(() -> {
             log("P" + pumpId + ": C" + carId + " login");
             removeCarCard(carId);
-            startServiceVisual(pumpId, "C" + carId);
+            startServiceVisual(pumpId, carId);
         });
     }
 

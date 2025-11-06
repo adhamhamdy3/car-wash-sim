@@ -1,4 +1,7 @@
-package simulator.cws;
+package simulator.cws.models;
+
+import simulator.cws.utlils.CarObserver;
+import simulator.cws.utlils.PumpObserver;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
