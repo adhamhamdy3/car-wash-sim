@@ -66,6 +66,7 @@ public class Pump extends Thread {
 
                 if (queue.isEmpty()) {
                     mutex.release();
+                    full.release();
                     continue;
                 }
 
