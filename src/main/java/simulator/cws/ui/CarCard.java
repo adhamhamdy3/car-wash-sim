@@ -27,7 +27,9 @@ public class CarCard extends VBox {
 
         // Label under the car image (C1, C2, ...)
         carLabel = new Text("C" + carId);
-
+        carLabel.setStyle(
+                "-fx-font-weight: bold; " + "-fx-text-fill: black;"
+        );
         this.getChildren().addAll(carImage, carLabel);
     }
 }

@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -14,6 +15,9 @@ public class Main extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("main-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1250, 780);
         stage.setTitle("Gas Station");
+        stage.getIcons().add(
+                new Image(getClass().getResource("/simulator/cws/assets/icon.png").toExternalForm())
+        );
         stage.setScene(scene);
         stage.show();
 

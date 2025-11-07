@@ -46,11 +46,23 @@ public class PumpCard extends VBox {
 
         // count down
         countDownlabel = new Label(this.countDown + "s");
+        countDownlabel.setStyle(
+                "-fx-font-weight: bold; " + "-fx-text-fill: black;"
+        );
         for (int i = this.countDown - 1; i >= 0; i--) {
             int value = i;
             timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(this.countDown - i), e -> {
                 String v = value + "s";
                 countDownlabel.setText(v);
+                countDownlabel.setStyle(
+                        "-fx-font-weight: bold; " + "-fx-text-fill: black;"
+                );
+                if(value <= 2){
+                    countDownlabel.setStyle(
+                            "-fx-font-weight: bold; " + "-fx-text-fill: red;"
+                    );
+                }
+
             }));
         }
         topBar.getChildren().addAll(lightImage, countDownlabel);
@@ -71,7 +83,7 @@ public class PumpCard extends VBox {
         serviceRow.getChildren().addAll(pumpImage, carBox);
 
         pumpLabel = new Label("Pump " + pumpId);
-        pumpLabel.setStyle("-fx-alignment: left;");
+        pumpLabel.setStyle("-fx-alignment: left; -fx-font-weight: bold; -fx-text-fill: black");
 
         // === Add everything to the card ===
         this.getChildren().addAll(topBar, serviceRow, pumpLabel);
@@ -96,11 +108,17 @@ public class PumpCard extends VBox {
     }
 
     public void startCD(int cd){
+        countDownlabel.setStyle(
+                "-fx-font-weight: bold; " + "-fx-text-fill: black;"
+        );
         countDownlabel.setText(cd + "s");
         timeline.play();
     }
 
     public void resetCD() {
+        countDownlabel.setStyle(
+                "-fx-font-weight: bold; " + "-fx-text-fill: black;"
+        );
         countDownlabel.setText(countDown + "s");
     }
 
@@ -111,7 +129,7 @@ public class PumpCard extends VBox {
         carImageView.setFitHeight(100);
 
         Label carLabel = new Label("C" + carId);
-        carLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: #333;");
+        carLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: black;");
 
         carBox.getChildren().addAll(carImageView, carLabel);
     }

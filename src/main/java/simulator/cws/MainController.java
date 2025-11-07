@@ -155,7 +155,7 @@ public class MainController implements CarObserver, PumpObserver {
     // ui update methods
     public void updateLabels() {
         arrivedLabel.setText("Total cars arrived: " + station.getCarCounter());
-        servicedLabel.setText("Cars serviced: " + station.getServicedCars());
+        servicedLabel.setText("Cars being serviced: " + station.getServicedCars());
         waitingLabel.setText("Cars waiting: " + station.getWaitingCars() + "/" + station.getWaitingAreaSize());
     }
 

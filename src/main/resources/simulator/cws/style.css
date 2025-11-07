@@ -17,6 +17,7 @@
 .top-label {
     -fx-text-fill: white;
     -fx-font-weight: bold;
+    -fx-font-size: 14px;
     -fx-font-family: "JetBrains Mono";
 }
 
@@ -33,6 +34,7 @@
     -fx-background-color: #e36414;
     -fx-text-fill: white;
     -fx-font-weight: bold;
+    -fx-font-size: 15px;
     -fx-background-radius: 6;
     -fx-cursor: hand;
     -fx-padding: 8 16;
@@ -44,6 +46,7 @@
 .stop-btn {
     -fx-background-color: #d32f2f;
     -fx-text-fill: white;
+    -fx-font-size: 15px;
     -fx-font-weight: bold;
     -fx-background-radius: 6;
     -fx-cursor: hand;
@@ -55,7 +58,8 @@
 
 .reset-btn {
     -fx-background-color: #bfa89e;
-    -fx-text-fill: white;
+    -fx-font-size: 15px;
+    -fx-text-fill: rgb(0, 0, 0);
     -fx-font-weight: bold;
     -fx-background-radius: 6;
     -fx-cursor: hand;
@@ -66,16 +70,16 @@
 }
 
 .addCarButton{
-    -fx-background-color: #ff7b00;
+    -fx-background-color: rgba(114, 50, 43, 0.9);
     -fx-text-fill: white;
     -fx-background-radius: 6;
-    -fx-font-size: 14px;
+    -fx-font-size: 16px;
     -fx-font-weight: bold;
     -fx-cursor: hand;
     -fx-padding: 6 16;
 }
 .addCarButton:hover{
-    -fx-background-color: rgba(227, 100, 20, 0.86);
+    -fx-background-color: #7d352e ;
 }
 
 /* ===== Main Area ===== */
@@ -86,7 +90,7 @@
 
 /* ===== Queue Section ===== */
 .section-title {
-    -fx-font-size: 16px;
+    -fx-font-size: 18px;
     -fx-font-weight: bold;
     -fx-text-fill: #7b3000;
 }
@@ -100,11 +104,6 @@
     -fx-min-height: 120;
 }
 
-.queue-empty-label {
-    -fx-text-fill: #7f8c8d;
-    -fx-font-style: italic;
-}
-
 .queue-status {
     -fx-text-fill: #7f8c8d;
     -fx-font-size: 13px;
@@ -115,6 +114,22 @@
 .pumps-scroll {
     -fx-background-color: transparent;
     -fx-border-color: transparent;
+}
+.pumps-scroll .slider {
+    -fx-background-color: #7b3000;
+}
+.pumps-scroll .slider .thumb {
+    -fx-background-color: #7b3000;
+    -fx-border-color: #7b3000;
+    -fx-background-radius: 50%;
+    -fx-pref-width: 12;
+    -fx-pref-height: 12;
+}
+
+.pumps-scroll .slider .track {
+    -fx-background-color: #7b3000;
+    -fx-background-radius: 10;
+    -fx-pref-height: 6;
 }
 
 .pumps-container {
@@ -134,18 +149,18 @@
     -fx-background-radius: 8;
 }
 .stat-blue {
-    -fx-text-fill: #3498db;
-    -fx-font-size: 15px;
+    -fx-text-fill: #60a5fa;
+    -fx-font-size: 16px;
     -fx-font-weight: 700;
 }
 .stat-green {
-    -fx-text-fill: #2ecc71;
-    -fx-font-size: 15px;
+    -fx-text-fill: #4ade80;
+    -fx-font-size: 16px;
     -fx-font-weight: 700;
 }
 .stat-orange {
-    -fx-text-fill: #e67e22;
-    -fx-font-size: 15px;
+    -fx-text-fill: #fb923c;
+    -fx-font-size: 16px;
     -fx-font-weight: 700;
 }
 
@@ -162,23 +177,25 @@
 .log-title {
     -fx-text-fill: #7b3000;
     -fx-font-weight: bold;
-    -fx-font-size: 16px;
+    -fx-font-size: 17px;
 }
 
 .log-area {
     -fx-control-inner-background: #1e1e1e;
     -fx-text-fill: #ffdd03;
     -fx-font-family: "Courier New";
-    -fx-font-size: 12px;
+    -fx-font-size: 13px;
     -fx-background-radius: 6;
     -fx-border-radius: 6;
     -fx-border-color: #2d2424;
     -fx-border-width: 1;
     -fx-wrap-text: true;
+    -fx-prompt-text-fill: #ffdd03;
 }
 
 .clear-btn {
     -fx-background-color: #6c3b2f;
+    -fx-font-size: 14px;
     -fx-text-fill: white;
     -fx-background-radius: 6;
     -fx-font-weight: bold;

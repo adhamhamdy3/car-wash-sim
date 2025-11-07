@@ -14,6 +14,8 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <BorderPane stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="simulator.cws.MainController">
 
     <!-- TOP SECTION -->
@@ -42,13 +44,33 @@
 
                 <!-- Service Time -->
                 <Label styleClass="top-label" text="Service time:" />
-                <Spinner fx:id="speedSpinner" editable="true" prefHeight="25" prefWidth="80" />
+                <Spinner fx:id="speedSpinner" styleClass="spinner" editable="true" prefHeight="25" prefWidth="80" />
 
                 <!-- Control Buttons -->
                 <Region HBox.hgrow="ALWAYS" />
-                <Button fx:id="startBtn" styleClass="start-btn" text="Start Simulation" />
-                <Button fx:id="stopBtn" disable="true" styleClass="stop-btn" text="Stop Simulation" />
-                <Button fx:id="resetBtn" styleClass="reset-btn" text="Reset" />
+                <Button fx:id="startBtn" styleClass="start-btn" text="Start Simulation">
+                    <graphic>
+                        <ImageView fitWidth="25" fitHeight="25" pickOnBounds="true" preserveRatio="true">
+                            <Image url="@assets/play.png"/>
+                        </ImageView>
+                    </graphic>
+                </Button>
+
+                <Button fx:id="stopBtn" disable="true" styleClass="stop-btn" text="Stop Simulation">
+                    <graphic>
+                        <ImageView fitWidth="25" fitHeight="25" pickOnBounds="true" preserveRatio="true">
+                            <Image url="@assets/stop.png"/>
+                        </ImageView>
+                    </graphic>
+                </Button>
+
+                <Button fx:id="resetBtn" styleClass="reset-btn" text="Reset">
+                    <graphic>
+                        <ImageView fitWidth="20" fitHeight="20" pickOnBounds="true" preserveRatio="true">
+                            <Image url="@assets/reset.png"/>
+                        </ImageView>
+                    </graphic>
+                </Button>
             </HBox>
         </VBox>
     </top>
@@ -68,9 +90,21 @@
                 <VBox spacing="8">
                     <!-- Queue Header -->
                     <HBox alignment="CENTER_LEFT" spacing="10">
-                        <Label fx:id="waitingQueueLabel" styleClass="section-title" text="Waiting Queue" />
+                        <Label fx:id="waitingQueueLabel" styleClass="section-title" text="Waiting Queue" graphicTextGap="8">
+                            <graphic>
+                                <ImageView fitWidth="20" fitHeight="20">
+                                    <Image url="@assets/queue.png"/>
+                                </ImageView>
+                            </graphic>
+                        </Label>
                         <Region HBox.hgrow="ALWAYS" />
-                        <Button fx:id="addCarButton" styleClass="addCarButton" text="Add Car" />
+                        <Button fx:id="addCarButton" styleClass="addCarButton" text="Add Car">
+                            <graphic>
+                                <ImageView fitWidth="20" fitHeight="20" pickOnBounds="true" preserveRatio="true">
+                                    <Image url="@assets/plus.png"/>
+                                </ImageView>
+                            </graphic>
+                        </Button>
                     </HBox>
 
                     <!-- Queue Display -->
@@ -87,7 +121,13 @@
 
                 <!-- Service Bays Section -->
                 <VBox spacing="8" VBox.vgrow="ALWAYS">
-                    <Label styleClass="section-title" text="Service Bays (Pumps)" />
+                    <Label styleClass="section-title" text="Service Bays (Pumps)" graphicTextGap="8">
+                        <graphic>
+                            <ImageView fitWidth="20" fitHeight="20" >
+                                <Image url="@assets/station.png"/>
+                            </ImageView>
+                        </graphic>
+                    </Label>
 
                     <ScrollPane fitToHeight="false" fitToWidth="true" hbarPolicy="NEVER" minHeight="220" styleClass="pumps-scroll" vbarPolicy="AS_NEEDED" VBox.vgrow="ALWAYS">
                         <content>
@@ -106,9 +146,27 @@
                         <Insets bottom="12" left="15" right="15" top="12" />
                     </padding>
 
-                    <Label fx:id="arrivedLabel" styleClass="stat-blue" text="Total cars arrived: 0" />
-                    <Label fx:id="servicedLabel" styleClass="stat-green" text="Cars serviced: 0" />
-                    <Label fx:id="waitingLabel" styleClass="stat-orange" text="Cars waiting: 0/0" />
+                    <Label fx:id="arrivedLabel" styleClass="stat-blue" text="Total cars arrived: 0" graphicTextGap="8">
+                        <graphic>
+                            <ImageView fitWidth="28" fitHeight="28">
+                                <Image url="@assets/car2.png"/>
+                            </ImageView>
+                        </graphic>
+                    </Label>
+                    <Label fx:id="servicedLabel" styleClass="stat-green" text="Cars being serviced: 0" graphicTextGap="8">
+                        <graphic>
+                            <ImageView fitWidth="25" fitHeight="25">
+                                <Image url="@assets/service.png"/>
+                            </ImageView>
+                        </graphic>
+                    </Label>
+                    <Label fx:id="waitingLabel" styleClass="stat-orange" text="Cars waiting: 0/0" graphicTextGap="8">
+                        <graphic>
+                            <ImageView fitWidth="25" fitHeight="25">
+                                <Image url="@assets/clock.png"/>
+                            </ImageView>
+                        </graphic>
+                    </Label>
                 </HBox>
             </VBox>
 
@@ -122,7 +180,13 @@
 
                 <TextArea fx:id="logArea" editable="false" focusTraversable="false" promptText="Activity logs will appear here..." styleClass="log-area" wrapText="true" VBox.vgrow="ALWAYS" />
 
-                <Button fx:id="clearLogBtn" styleClass="clear-btn" text="Clear Log" />
+                <Button fx:id="clearLogBtn" styleClass="clear-btn" text="Clear Log" contentDisplay="RIGHT">
+                    <graphic>
+                        <ImageView fitWidth="20" fitHeight="20" pickOnBounds="true" preserveRatio="true">
+                            <Image url="@assets/clear2.png"/>
+                        </ImageView>
+                    </graphic>
+                </Button>
             </VBox>
         </SplitPane>
     </center>
