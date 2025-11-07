@@ -25,26 +25,24 @@ This design guarantees correct synchronization, preventing deadlocks and maintai
 
 ## How to Run
 
+### Prerequisites
+- **JDK 23** or later
+- **Maven 3.9+**
+- Internet connection (for downloading dependencies)
+
+### Installation & Setup
 1. Clone the repository:
    ```bash
    git clone https://github.com/adhamhamdy3/car-wash-sim.git
    cd car-wash-sim
    ```
-2. Open the project in your Java IDE (e.g., IntelliJ IDEA).
-3. Configure the JavaFX SDK in your project settings.
-4. Run the `Main` class to start the simulation.
 
-## Build & Run (Maven)
+2. Run the simulation using Maven:
+   ```bash
+   mvn clean javafx:run
+   ```
 
-This project uses **Maven** for dependency management and build automation.
-
-### Prerequisites
-- **JDK 23** or later  
-- **Maven 3.9+**  
-- Internet connection (for downloading dependencies)
-
-### Run the Simulation
-You can run the JavaFX application directly using the Maven JavaFX plugin:
-
-```bash
-mvn clean javafx:run
+### Alternative: Running via IDE
+1. Open the project in your Java IDE (e.g., IntelliJ IDEA)
+2. Configure the JavaFX SDK in your project settings
+3. Run the `Main` class to start the simulation
