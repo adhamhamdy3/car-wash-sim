@@ -1,4 +1,4 @@
-# Car Wash Simulator
+# Gas Station Simulator
 
 A multithreaded Java simulation that models a busy car wash and gas station, demonstrating the Producer–Consumer problem using semaphores, mutex locks, and a bounded queue to coordinate car arrivals and pump operations.
 
@@ -10,7 +10,7 @@ The GUI, built with JavaFX, visually reflects the real-time state of the simulat
 
 ## Screenshot
 
-![Car Wash Simulator GUI](https://github.com/user-attachments/assets/f0a3aeb8-643d-4996-b0b7-5d70bbf277ee)
+![Gas Station Simulator GUI](https://github.com/user-attachments/assets/f0a3aeb8-643d-4996-b0b7-5d70bbf277ee)
 
 ## Multithreading Logic
 
@@ -33,8 +33,8 @@ This design guarantees correct synchronization, preventing deadlocks and maintai
 ### Installation & Setup
 1. Clone the repository:
    ```bash
-   git clone https://github.com/adhamhamdy3/car-wash-sim.git
-   cd car-wash-sim
+   git clone https://github.com/adhamhamdy3/gas-station-sim.git
+   cd gas-station-sim
    ```
 
 2. Run the simulation using Maven:
